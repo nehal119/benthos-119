@@ -10,7 +10,7 @@ import (
 
 	"github.com/nehal119/benthos-119/public/service"
 
-	_ "github.com/nehal119/benthos-119/internal/impl/lang"
+	_ "github.com/nehal119/benthos-119/pkg/impl/lang"
 	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 

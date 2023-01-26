@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/nehal119/benthos-119/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/pkg/filepath/ifs"
 	"github.com/nehal119/benthos-119/public/bloblang"
 	"github.com/nehal119/benthos-119/public/service"
 )

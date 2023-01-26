@@ -8,12 +8,12 @@ import (
 
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/nehal119/benthos-119/internal/api"
-	"github.com/nehal119/benthos-119/internal/component/metrics"
-	"github.com/nehal119/benthos-119/internal/log"
-	"github.com/nehal119/benthos-119/internal/manager"
-	"github.com/nehal119/benthos-119/internal/shutdown"
-	"github.com/nehal119/benthos-119/internal/stream"
+	"github.com/nehal119/benthos-119/pkg/api"
+	"github.com/nehal119/benthos-119/pkg/component/metrics"
+	"github.com/nehal119/benthos-119/pkg/log"
+	"github.com/nehal119/benthos-119/pkg/manager"
+	"github.com/nehal119/benthos-119/pkg/shutdown"
+	"github.com/nehal119/benthos-119/pkg/stream"
 )
 
 // Stream executes a full Benthos stream and provides methods for performing

@@ -3,8 +3,8 @@ package service
 import (
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/internal/bundle"
-	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/pkg/bundle"
+	"github.com/nehal119/benthos-119/pkg/docs"
 )
 
 type fieldUnwrapper struct {

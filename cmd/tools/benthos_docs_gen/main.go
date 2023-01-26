@@ -8,11 +8,11 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/nehal119/benthos-119/internal/api"
-	tdocs "github.com/nehal119/benthos-119/internal/cli/test/docs"
-	"github.com/nehal119/benthos-119/internal/docs"
-	"github.com/nehal119/benthos-119/internal/log"
-	"github.com/nehal119/benthos-119/internal/template"
+	"github.com/nehal119/benthos-119/pkg/api"
+	tdocs "github.com/nehal119/benthos-119/pkg/cli/test/docs"
+	"github.com/nehal119/benthos-119/pkg/docs"
+	"github.com/nehal119/benthos-119/pkg/log"
+	"github.com/nehal119/benthos-119/pkg/template"
 	"github.com/nehal119/benthos-119/public/service"
 
 	_ "github.com/nehal119/benthos-119/public/components/all"

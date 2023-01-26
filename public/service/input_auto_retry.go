@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync/atomic"
 
-	"github.com/nehal119/benthos-119/internal/autoretry"
+	"github.com/nehal119/benthos-119/pkg/autoretry"
 )
 
 // AutoRetryNacks wraps an input implementation with a component that

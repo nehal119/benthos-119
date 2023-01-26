@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/nehal119/benthos-119/internal/component"
-	"github.com/nehal119/benthos-119/internal/component/buffer"
-	"github.com/nehal119/benthos-119/internal/message"
-	"github.com/nehal119/benthos-119/internal/shutdown"
+	"github.com/nehal119/benthos-119/pkg/component"
+	"github.com/nehal119/benthos-119/pkg/component/buffer"
+	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/nehal119/benthos-119/pkg/shutdown"
 )
 
 // BatchBuffer is an interface implemented by Buffers able to read and write

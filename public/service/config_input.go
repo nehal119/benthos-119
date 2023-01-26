@@ -7,8 +7,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/internal/component/input"
-	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/pkg/component/input"
+	"github.com/nehal119/benthos-119/pkg/docs"
 )
 
 // NewInputField defines a new input field, it is then possible to extract an

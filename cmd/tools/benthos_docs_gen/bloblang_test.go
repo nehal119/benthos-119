@@ -12,10 +12,10 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/nehal119/benthos-119/internal/bloblang"
-	"github.com/nehal119/benthos-119/internal/bloblang/query"
-	"github.com/nehal119/benthos-119/internal/message"
-	"github.com/nehal119/benthos-119/internal/tracing"
+	"github.com/nehal119/benthos-119/pkg/bloblang"
+	"github.com/nehal119/benthos-119/pkg/bloblang/query"
+	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/nehal119/benthos-119/pkg/tracing"
 
 	_ "github.com/nehal119/benthos-119/public/components/all"
 )

@@ -1,9 +1,9 @@
 package bloblang
 
 import (
-	"github.com/nehal119/benthos-119/internal/bloblang"
-	"github.com/nehal119/benthos-119/internal/bloblang/parser"
-	"github.com/nehal119/benthos-119/internal/bloblang/query"
+	"github.com/nehal119/benthos-119/pkg/bloblang"
+	"github.com/nehal119/benthos-119/pkg/bloblang/parser"
+	"github.com/nehal119/benthos-119/pkg/bloblang/query"
 )
 
 // Environment provides an isolated Bloblang environment where the available

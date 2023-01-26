@@ -9,10 +9,10 @@
 package pure
 
 import (
-	"github.com/nehal119/benthos-119/internal/template"
+	"github.com/nehal119/benthos-119/pkg/template"
 
 	// Import only pure packages.
-	_ "github.com/nehal119/benthos-119/internal/impl/pure"
+	_ "github.com/nehal119/benthos-119/pkg/impl/pure"
 )
 
 func init() {

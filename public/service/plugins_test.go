@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/internal/component/cache"
-	"github.com/nehal119/benthos-119/internal/component/input"
-	"github.com/nehal119/benthos-119/internal/component/output"
-	"github.com/nehal119/benthos-119/internal/component/processor"
-	"github.com/nehal119/benthos-119/internal/component/ratelimit"
-	"github.com/nehal119/benthos-119/internal/docs"
-	"github.com/nehal119/benthos-119/internal/manager"
+	"github.com/nehal119/benthos-119/pkg/component/cache"
+	"github.com/nehal119/benthos-119/pkg/component/input"
+	"github.com/nehal119/benthos-119/pkg/component/output"
+	"github.com/nehal119/benthos-119/pkg/component/processor"
+	"github.com/nehal119/benthos-119/pkg/component/ratelimit"
+	"github.com/nehal119/benthos-119/pkg/docs"
+	"github.com/nehal119/benthos-119/pkg/manager"
 	"github.com/nehal119/benthos-119/public/service"
 )
 

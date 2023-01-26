@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/pkg/docs"
 )
 
 var (

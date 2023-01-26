@@ -7,13 +7,13 @@ import (
 
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/nehal119/benthos-119/internal/bundle"
-	"github.com/nehal119/benthos-119/internal/component/cache"
-	"github.com/nehal119/benthos-119/internal/component/input"
-	"github.com/nehal119/benthos-119/internal/component/output"
-	"github.com/nehal119/benthos-119/internal/component/ratelimit"
-	"github.com/nehal119/benthos-119/internal/filepath/ifs"
-	"github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/pkg/bundle"
+	"github.com/nehal119/benthos-119/pkg/component/cache"
+	"github.com/nehal119/benthos-119/pkg/component/input"
+	"github.com/nehal119/benthos-119/pkg/component/output"
+	"github.com/nehal119/benthos-119/pkg/component/ratelimit"
+	"github.com/nehal119/benthos-119/pkg/filepath/ifs"
+	"github.com/nehal119/benthos-119/pkg/manager/mock"
 )
 
 // Resources provides access to service-wide resources.

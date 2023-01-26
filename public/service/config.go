@@ -10,10 +10,10 @@ import (
 	"github.com/Jeffail/gabs/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/internal/bloblang/query"
-	"github.com/nehal119/benthos-119/internal/bundle"
-	"github.com/nehal119/benthos-119/internal/docs"
-	"github.com/nehal119/benthos-119/internal/manager"
+	"github.com/nehal119/benthos-119/pkg/bloblang/query"
+	"github.com/nehal119/benthos-119/pkg/bundle"
+	"github.com/nehal119/benthos-119/pkg/docs"
+	"github.com/nehal119/benthos-119/pkg/manager"
 )
 
 // ConfigField describes a field within a component configuration, to be added

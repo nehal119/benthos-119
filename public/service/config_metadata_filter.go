@@ -5,8 +5,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/internal/docs"
-	"github.com/nehal119/benthos-119/internal/metadata"
+	"github.com/nehal119/benthos-119/pkg/docs"
+	"github.com/nehal119/benthos-119/pkg/metadata"
 )
 
 // NewMetadataFilterField creates a config field spec for describing which

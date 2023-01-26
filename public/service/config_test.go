@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/pkg/docs"
 )
 
 func TestConfigGeneric(t *testing.T) {

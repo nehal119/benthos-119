@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/nehal119/benthos-119/internal/bloblang"
-	"github.com/nehal119/benthos-119/internal/bloblang/field"
-	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/pkg/bloblang"
+	"github.com/nehal119/benthos-119/pkg/bloblang/field"
+	"github.com/nehal119/benthos-119/pkg/message"
 )
 
 // InterpolatedString resolves a string containing dynamic interpolation

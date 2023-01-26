@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 
-	"github.com/nehal119/benthos-119/internal/batch"
-	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/pkg/batch"
+	"github.com/nehal119/benthos-119/pkg/message"
 )
 
 // BatchError groups the errors that were encountered while processing a

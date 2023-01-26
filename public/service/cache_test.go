@@ -8,9 +8,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/nehal119/benthos-119/internal/component"
-	"github.com/nehal119/benthos-119/internal/component/cache"
-	"github.com/nehal119/benthos-119/internal/component/metrics"
+	"github.com/nehal119/benthos-119/pkg/component"
+	"github.com/nehal119/benthos-119/pkg/component/cache"
+	"github.com/nehal119/benthos-119/pkg/component/metrics"
 )
 
 type testCacheItem struct {

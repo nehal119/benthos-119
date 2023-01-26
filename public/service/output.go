@@ -5,9 +5,9 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/nehal119/benthos-119/internal/component"
-	ioutput "github.com/nehal119/benthos-119/internal/component/output"
-	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/pkg/component"
+	ioutput "github.com/nehal119/benthos-119/pkg/component/output"
+	"github.com/nehal119/benthos-119/pkg/message"
 )
 
 // Output is an interface implemented by Benthos outputs that support single

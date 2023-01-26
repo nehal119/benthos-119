@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/nehal119/benthos-119/internal/component"
-	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/pkg/component"
+	"github.com/nehal119/benthos-119/pkg/message"
 )
 
 type fnOutput struct {

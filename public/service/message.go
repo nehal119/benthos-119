@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/nehal119/benthos-119/internal/bloblang/mapping"
-	"github.com/nehal119/benthos-119/internal/bloblang/query"
-	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/pkg/bloblang/mapping"
+	"github.com/nehal119/benthos-119/pkg/bloblang/query"
+	"github.com/nehal119/benthos-119/pkg/message"
 	"github.com/nehal119/benthos-119/public/bloblang"
 )
 

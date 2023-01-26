@@ -3,7 +3,7 @@ package bloblang
 import (
 	"encoding/json"
 
-	"github.com/nehal119/benthos-119/internal/bloblang/query"
+	"github.com/nehal119/benthos-119/pkg/bloblang/query"
 )
 
 // FunctionView describes a particular function belonging to a Bloblang

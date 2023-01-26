@@ -3,7 +3,7 @@ package service
 import (
 	"sync/atomic"
 
-	"github.com/nehal119/benthos-119/internal/bundle/tracing"
+	"github.com/nehal119/benthos-119/pkg/bundle/tracing"
 )
 
 // TracingEventType describes the type of tracing event a component might

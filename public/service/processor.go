@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/nehal119/benthos-119/internal/bundle"
-	"github.com/nehal119/benthos-119/internal/component/processor"
-	"github.com/nehal119/benthos-119/internal/message"
-	"github.com/nehal119/benthos-119/internal/tracing"
+	"github.com/nehal119/benthos-119/pkg/bundle"
+	"github.com/nehal119/benthos-119/pkg/component/processor"
+	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/nehal119/benthos-119/pkg/tracing"
 )
 
 // Processor is a Benthos processor implementation that works against single

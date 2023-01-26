@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	ibloblang "github.com/nehal119/benthos-119/internal/bloblang"
-	"github.com/nehal119/benthos-119/internal/message"
+	ibloblang "github.com/nehal119/benthos-119/pkg/bloblang"
+	"github.com/nehal119/benthos-119/pkg/message"
 	"github.com/nehal119/benthos-119/public/bloblang"
 )
 

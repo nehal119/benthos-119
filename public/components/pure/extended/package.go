@@ -10,11 +10,11 @@ package extended
 
 import (
 	// Import pure but larger packages.
-	_ "github.com/nehal119/benthos-119/internal/impl/awk"
-	_ "github.com/nehal119/benthos-119/internal/impl/jsonpath"
-	_ "github.com/nehal119/benthos-119/internal/impl/lang"
-	_ "github.com/nehal119/benthos-119/internal/impl/msgpack"
-	_ "github.com/nehal119/benthos-119/internal/impl/parquet"
-	_ "github.com/nehal119/benthos-119/internal/impl/pure/extended"
-	_ "github.com/nehal119/benthos-119/internal/impl/xml"
+	_ "github.com/nehal119/benthos-119/pkg/impl/awk"
+	_ "github.com/nehal119/benthos-119/pkg/impl/jsonpath"
+	_ "github.com/nehal119/benthos-119/pkg/impl/lang"
+	_ "github.com/nehal119/benthos-119/pkg/impl/msgpack"
+	_ "github.com/nehal119/benthos-119/pkg/impl/parquet"
+	_ "github.com/nehal119/benthos-119/pkg/impl/pure/extended"
+	_ "github.com/nehal119/benthos-119/pkg/impl/xml"
 )

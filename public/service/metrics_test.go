@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/nehal119/benthos-119/internal/component/metrics"
+	"github.com/nehal119/benthos-119/pkg/component/metrics"
 )
 
 func TestMetricsNil(t *testing.T) {

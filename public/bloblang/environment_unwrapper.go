@@ -1,7 +1,7 @@
 package bloblang
 
 import (
-	"github.com/nehal119/benthos-119/internal/bloblang"
+	"github.com/nehal119/benthos-119/pkg/bloblang"
 )
 
 type environmentUnwrapper struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/nehal119/benthos-119/internal/template"
+	"github.com/nehal119/benthos-119/pkg/template"
 	_ "github.com/nehal119/benthos-119/public/components/all"
 )
 
