@@ -16,16 +16,16 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/gofrs/uuid"
 
-	"github.com/benthosdev/benthos/v4/internal/batch/policy"
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/component/input"
-	"github.com/benthosdev/benthos/v4/internal/component/input/processors"
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/impl/aws/session"
-	"github.com/benthosdev/benthos/v4/internal/log"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/internal/old/util/retries"
+	"github.com/nehal119/benthos-119/internal/batch/policy"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/component/input"
+	"github.com/nehal119/benthos-119/internal/component/input/processors"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/impl/aws/session"
+	"github.com/nehal119/benthos-119/internal/log"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/internal/old/util/retries"
 )
 
 func init() {

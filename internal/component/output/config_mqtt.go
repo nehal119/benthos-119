@@ -1,8 +1,8 @@
 package output
 
 import (
-	mqttconf "github.com/benthosdev/benthos/v4/internal/impl/mqtt/shared"
-	"github.com/benthosdev/benthos/v4/internal/tls"
+	mqttconf "github.com/nehal119/benthos-119/internal/impl/mqtt/shared"
+	"github.com/nehal119/benthos-119/internal/tls"
 )
 
 // MQTTConfig contains configuration fields for the MQTT output type.

@@ -10,9 +10,9 @@ import (
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/ory/dockertest/v3"
 
-	"github.com/benthosdev/benthos/v4/internal/component/metrics"
-	"github.com/benthosdev/benthos/v4/internal/integration"
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/component/metrics"
+	"github.com/nehal119/benthos-119/internal/integration"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
 )
 
 func TestInfluxIntegration(t *testing.T) {

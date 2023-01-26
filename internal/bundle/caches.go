@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/component/cache"
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/component/cache"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 // AllCaches is a set containing every single cache that has been imported.

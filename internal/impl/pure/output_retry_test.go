@@ -10,11 +10,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 func TestRetryConfigErrs(t *testing.T) {

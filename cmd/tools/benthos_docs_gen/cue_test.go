@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/config/schema"
-	"github.com/benthosdev/benthos/v4/internal/cuegen"
+	"github.com/nehal119/benthos-119/internal/config/schema"
+	"github.com/nehal119/benthos-119/internal/cuegen"
 
 	_ "embed"
 )

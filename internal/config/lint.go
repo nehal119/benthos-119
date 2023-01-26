@@ -9,8 +9,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/filepath/ifs"
 )
 
 // LintOptions specifies the linters that will be enabled.

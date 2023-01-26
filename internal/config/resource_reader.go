@@ -11,16 +11,16 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	tdocs "github.com/benthosdev/benthos/v4/internal/cli/test/docs"
-	"github.com/benthosdev/benthos/v4/internal/component/cache"
-	"github.com/benthosdev/benthos/v4/internal/component/input"
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/component/processor"
-	"github.com/benthosdev/benthos/v4/internal/component/ratelimit"
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	ifilepath "github.com/benthosdev/benthos/v4/internal/filepath"
-	"github.com/benthosdev/benthos/v4/internal/manager"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	tdocs "github.com/nehal119/benthos-119/internal/cli/test/docs"
+	"github.com/nehal119/benthos-119/internal/component/cache"
+	"github.com/nehal119/benthos-119/internal/component/input"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/component/processor"
+	"github.com/nehal119/benthos-119/internal/component/ratelimit"
+	"github.com/nehal119/benthos-119/internal/docs"
+	ifilepath "github.com/nehal119/benthos-119/internal/filepath"
+	"github.com/nehal119/benthos-119/internal/manager"
 )
 
 // Keeps track of which resource file provided a given resource type, this is

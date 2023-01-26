@@ -1,8 +1,8 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/metadata"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/metadata"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // AMQPExchangeDeclareConfig contains fields indicating whether the target AMQP

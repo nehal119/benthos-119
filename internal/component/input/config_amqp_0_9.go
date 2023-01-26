@@ -1,7 +1,7 @@
 package input
 
 import (
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // AMQP09QueueDeclareConfig contains fields indicating whether the target AMQP09

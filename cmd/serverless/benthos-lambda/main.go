@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/serverless/lambda"
+	"github.com/nehal119/benthos-119/internal/serverless/lambda"
 
 	// Import all plugins defined within the repo.
-	_ "github.com/benthosdev/benthos/v4/public/components/all"
+	_ "github.com/nehal119/benthos-119/public/components/all"
 )
 
 func main() {

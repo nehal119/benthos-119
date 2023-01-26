@@ -1,7 +1,7 @@
 package stream
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 // Spec returns a docs.FieldSpec for a stream configuration.

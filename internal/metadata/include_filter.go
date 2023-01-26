@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 // IncludeFilterDocs returns a docs spec for a metadata filter where keys are

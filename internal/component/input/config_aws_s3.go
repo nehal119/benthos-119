@@ -1,7 +1,7 @@
 package input
 
 import (
-	sess "github.com/benthosdev/benthos/v4/internal/impl/aws/session"
+	sess "github.com/nehal119/benthos-119/internal/impl/aws/session"
 )
 
 // AWSS3SQSConfig contains configuration for hooking up the S3 input with an SQS queue.

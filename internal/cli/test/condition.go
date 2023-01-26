@@ -12,11 +12,11 @@ import (
 	"github.com/nsf/jsondiff"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/bloblang"
-	"github.com/benthosdev/benthos/v4/internal/bloblang/mapping"
-	"github.com/benthosdev/benthos/v4/internal/bloblang/query"
-	"github.com/benthosdev/benthos/v4/internal/filepath/ifs"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bloblang"
+	"github.com/nehal119/benthos-119/internal/bloblang/mapping"
+	"github.com/nehal119/benthos-119/internal/bloblang/query"
+	"github.com/nehal119/benthos-119/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 // Condition is a test case against a message part.

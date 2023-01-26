@@ -3,8 +3,8 @@ package input
 import (
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/component/processor"
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/component/processor"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 // Config is the all encompassing configuration struct for all input types.

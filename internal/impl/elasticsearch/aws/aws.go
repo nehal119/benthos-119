@@ -4,9 +4,9 @@ import (
 	"github.com/olivere/elastic/v7"
 	aws "github.com/olivere/elastic/v7/aws/v4"
 
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	baws "github.com/benthosdev/benthos/v4/internal/impl/aws"
-	"github.com/benthosdev/benthos/v4/internal/impl/elasticsearch"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	baws "github.com/nehal119/benthos-119/internal/impl/aws"
+	"github.com/nehal119/benthos-119/internal/impl/elasticsearch"
 )
 
 func init() {

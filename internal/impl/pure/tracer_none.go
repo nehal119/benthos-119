@@ -3,9 +3,9 @@ package pure
 import (
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component/tracer"
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component/tracer"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 func init() {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/benthosdev/benthos/v4/internal/component"
+	"github.com/nehal119/benthos-119/internal/component"
 )
 
 // Capped receives an ordered feed of integer based offsets being tracked, and

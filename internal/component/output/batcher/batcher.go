@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/benthosdev/benthos/v4/internal/batch/policy"
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/component/metrics"
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/log"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/internal/shutdown"
-	"github.com/benthosdev/benthos/v4/internal/transaction"
+	"github.com/nehal119/benthos-119/internal/batch/policy"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/component/metrics"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/log"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/internal/shutdown"
+	"github.com/nehal119/benthos-119/internal/transaction"
 )
 
 // Impl wraps an output with a batching policy.

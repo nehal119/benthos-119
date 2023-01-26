@@ -9,13 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/component/input"
-	"github.com/benthosdev/benthos/v4/internal/component/input/processors"
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/filepath"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/component/input"
+	"github.com/nehal119/benthos-119/internal/component/input/processors"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/filepath"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 type csvScannerInfo struct {

@@ -11,9 +11,9 @@ import (
 
 	"github.com/Shopify/sarama"
 
-	"github.com/benthosdev/benthos/v4/internal/batch/policy"
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/batch/policy"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 type closureOffsetTracker struct {

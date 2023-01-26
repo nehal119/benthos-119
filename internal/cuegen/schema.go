@@ -5,7 +5,7 @@ import (
 	"cuelang.org/go/cue/format"
 
 	// Populating default environment in order to walk it and generate Cue types.
-	"github.com/benthosdev/benthos/v4/internal/config/schema"
+	"github.com/nehal119/benthos-119/internal/config/schema"
 )
 
 // GenerateSchema generates a Cue schema which includes definitions for the

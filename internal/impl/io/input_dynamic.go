@@ -7,11 +7,11 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/api"
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component/input"
-	"github.com/benthosdev/benthos/v4/internal/component/input/processors"
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/api"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component/input"
+	"github.com/nehal119/benthos-119/internal/component/input/processors"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 func init() {

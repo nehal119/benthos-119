@@ -1,7 +1,7 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/metadata"
+	"github.com/nehal119/benthos-119/internal/metadata"
 )
 
 // GCPPubSubConfig contains configuration fields for the output GCPPubSub type.

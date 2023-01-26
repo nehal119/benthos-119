@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 const mongoDuplicateKeyErrCode = 11000

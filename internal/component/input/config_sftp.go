@@ -1,7 +1,7 @@
 package input
 
 import (
-	sftpSetup "github.com/benthosdev/benthos/v4/internal/impl/sftp/shared"
+	sftpSetup "github.com/nehal119/benthos-119/internal/impl/sftp/shared"
 )
 
 type watcherConfig struct {

@@ -1,6 +1,6 @@
 package tls
 
-import "github.com/benthosdev/benthos/v4/internal/docs"
+import "github.com/nehal119/benthos-119/internal/docs"
 
 // FieldSpec returns a spec for a common TLS field.
 func FieldSpec() docs.FieldSpec {

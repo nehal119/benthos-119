@@ -1,10 +1,10 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	sess "github.com/benthosdev/benthos/v4/internal/impl/aws/session"
-	"github.com/benthosdev/benthos/v4/internal/old/util/retries"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	sess "github.com/nehal119/benthos-119/internal/impl/aws/session"
+	"github.com/nehal119/benthos-119/internal/old/util/retries"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // OptionalAWSConfig contains config fields for AWS authentication with an

@@ -3,7 +3,7 @@ package output
 import (
 	"encoding/json"
 
-	"github.com/benthosdev/benthos/v4/internal/old/util/retries"
+	"github.com/nehal119/benthos-119/internal/old/util/retries"
 )
 
 // RetryConfig contains configuration values for the Retry output type.

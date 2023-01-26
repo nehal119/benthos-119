@@ -7,11 +7,11 @@ import (
 
 	"github.com/Shopify/sarama"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component/cache"
-	"github.com/benthosdev/benthos/v4/internal/impl/aws/config"
-	ksasl "github.com/benthosdev/benthos/v4/internal/impl/kafka/sasl"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component/cache"
+	"github.com/nehal119/benthos-119/internal/impl/aws/config"
+	ksasl "github.com/nehal119/benthos-119/internal/impl/kafka/sasl"
+	"github.com/nehal119/benthos-119/public/service"
 
 	"github.com/twmb/franz-go/pkg/sasl"
 	"github.com/twmb/franz-go/pkg/sasl/oauth"

@@ -8,7 +8,7 @@ import (
 
 	"cloud.google.com/go/storage"
 
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func gcpCloudStorageCacheConfig() *service.ConfigSpec {

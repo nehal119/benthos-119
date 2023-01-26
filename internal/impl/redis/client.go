@@ -8,9 +8,9 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
-	"github.com/benthosdev/benthos/v4/internal/filepath/ifs"
-	"github.com/benthosdev/benthos/v4/internal/impl/redis/old"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/internal/impl/redis/old"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func clientFields() []*service.ConfigField {

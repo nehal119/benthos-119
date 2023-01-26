@@ -25,9 +25,9 @@ import (
 	"github.com/youmark/pkcs8"
 	"golang.org/x/crypto/ssh"
 
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/filepath/ifs"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 const (

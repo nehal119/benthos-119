@@ -1,9 +1,9 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	"github.com/benthosdev/benthos/v4/internal/old/util/retries"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/old/util/retries"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // PasswordAuthenticator contains the fields that will be used to authenticate with

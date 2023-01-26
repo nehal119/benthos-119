@@ -14,7 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 
-	"github.com/benthosdev/benthos/v4/internal/component/input"
+	"github.com/nehal119/benthos-119/internal/component/input"
 )
 
 // Common errors that might occur throughout checkpointing.

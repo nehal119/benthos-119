@@ -12,12 +12,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	batchInternal "github.com/benthosdev/benthos/v4/internal/batch"
-	"github.com/benthosdev/benthos/v4/internal/batch/policy"
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	"github.com/benthosdev/benthos/v4/internal/component/output/batcher"
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	batchInternal "github.com/nehal119/benthos-119/internal/batch"
+	"github.com/nehal119/benthos-119/internal/batch/policy"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/component/output/batcher"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 func TestBatcherEarlyTermination(t *testing.T) {

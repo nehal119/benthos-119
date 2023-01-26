@@ -11,8 +11,8 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 func TestWebsocketOutputBasic(t *testing.T) {

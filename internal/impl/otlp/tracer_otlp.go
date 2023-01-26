@@ -15,7 +15,7 @@ import (
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func init() {

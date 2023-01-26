@@ -6,7 +6,7 @@ package shared
 import (
 	"fmt"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 // ErrSASLMechanismNotSupported is returned if a SASL mechanism was not recognized.

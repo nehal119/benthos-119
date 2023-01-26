@@ -11,11 +11,11 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	tdocs "github.com/benthosdev/benthos/v4/internal/cli/test/docs"
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	ifilepath "github.com/benthosdev/benthos/v4/internal/filepath"
-	"github.com/benthosdev/benthos/v4/internal/stream"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	tdocs "github.com/nehal119/benthos-119/internal/cli/test/docs"
+	"github.com/nehal119/benthos-119/internal/docs"
+	ifilepath "github.com/nehal119/benthos-119/internal/filepath"
+	"github.com/nehal119/benthos-119/internal/stream"
 )
 
 // inferStreamID attempts to infer a stream identifier from a file path and

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 // Designed to contain all manner of structured data nasties.

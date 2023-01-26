@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 // LintType is a discrete linting type.

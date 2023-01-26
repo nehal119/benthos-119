@@ -20,14 +20,14 @@ import (
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v3"
 
-	bmanager "github.com/benthosdev/benthos/v4/internal/manager"
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/internal/stream"
-	"github.com/benthosdev/benthos/v4/internal/stream/manager"
+	bmanager "github.com/nehal119/benthos-119/internal/manager"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/internal/stream"
+	"github.com/nehal119/benthos-119/internal/stream/manager"
 
-	_ "github.com/benthosdev/benthos/v4/public/components/io"
-	_ "github.com/benthosdev/benthos/v4/public/components/pure"
+	_ "github.com/nehal119/benthos-119/public/components/io"
+	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 
 func router(m *manager.Type) *mux.Router {

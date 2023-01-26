@@ -1,7 +1,7 @@
 package output
 
 import (
-	bredis "github.com/benthosdev/benthos/v4/internal/impl/redis/old"
+	bredis "github.com/nehal119/benthos-119/internal/impl/redis/old"
 )
 
 // RedisHashConfig contains configuration fields for the RedisHash output type.

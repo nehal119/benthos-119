@@ -1,7 +1,7 @@
 package input
 
 import (
-	sess "github.com/benthosdev/benthos/v4/internal/impl/aws/session"
+	sess "github.com/nehal119/benthos-119/internal/impl/aws/session"
 )
 
 // AWSSQSConfig contains configuration values for the input type.

@@ -1,7 +1,7 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
 )
 
 const (

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/integration"
+	"github.com/nehal119/benthos-119/internal/integration"
 )
 
 func TestIntegrationNatsStream(t *testing.T) {

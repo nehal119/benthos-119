@@ -10,14 +10,14 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/benthosdev/benthos/v4/internal/batch"
-	"github.com/benthosdev/benthos/v4/internal/bloblang/mapping"
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/component/metrics"
-	"github.com/benthosdev/benthos/v4/internal/log"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/internal/shutdown"
-	"github.com/benthosdev/benthos/v4/internal/tracing"
+	"github.com/nehal119/benthos-119/internal/batch"
+	"github.com/nehal119/benthos-119/internal/bloblang/mapping"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/component/metrics"
+	"github.com/nehal119/benthos-119/internal/log"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/internal/shutdown"
+	"github.com/nehal119/benthos-119/internal/tracing"
 )
 
 // AsyncSink is a type that writes Benthos messages to a third party sink. If

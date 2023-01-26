@@ -1,7 +1,7 @@
 package httpclient
 
 import (
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 // AuthFieldSpecs returns a map of field specs for an auth type.

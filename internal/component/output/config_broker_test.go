@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/component/output"
 
-	_ "github.com/benthosdev/benthos/v4/public/components/pure"
+	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 
 func TestOutBrokerConfigDefaults(t *testing.T) {

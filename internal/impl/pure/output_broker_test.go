@@ -11,14 +11,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/component/processor"
-	bmock "github.com/benthosdev/benthos/v4/internal/manager/mock"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/component/processor"
+	bmock "github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/message"
 
-	_ "github.com/benthosdev/benthos/v4/public/components/io"
-	"github.com/benthosdev/benthos/v4/public/service"
+	_ "github.com/nehal119/benthos-119/public/components/io"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func TestFanOutBroker(t *testing.T) {

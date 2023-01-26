@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/bloblang"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bloblang"
+	"github.com/nehal119/benthos-119/internal/message"
 
-	_ "github.com/benthosdev/benthos/v4/public/components/pure"
+	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 
 func TestMappings(t *testing.T) {

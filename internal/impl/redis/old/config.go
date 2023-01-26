@@ -1,8 +1,8 @@
 package old
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/docs"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // Config is a config struct for a redis connection.

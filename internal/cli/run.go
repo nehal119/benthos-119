@@ -9,16 +9,16 @@ import (
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/bloblang/parser"
-	"github.com/benthosdev/benthos/v4/internal/cli/blobl"
-	"github.com/benthosdev/benthos/v4/internal/cli/studio"
-	clitemplate "github.com/benthosdev/benthos/v4/internal/cli/template"
-	"github.com/benthosdev/benthos/v4/internal/cli/test"
-	"github.com/benthosdev/benthos/v4/internal/config"
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/filepath"
-	"github.com/benthosdev/benthos/v4/internal/filepath/ifs"
-	"github.com/benthosdev/benthos/v4/internal/template"
+	"github.com/nehal119/benthos-119/internal/bloblang/parser"
+	"github.com/nehal119/benthos-119/internal/cli/blobl"
+	"github.com/nehal119/benthos-119/internal/cli/studio"
+	clitemplate "github.com/nehal119/benthos-119/internal/cli/template"
+	"github.com/nehal119/benthos-119/internal/cli/test"
+	"github.com/nehal119/benthos-119/internal/config"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/filepath"
+	"github.com/nehal119/benthos-119/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/internal/template"
 )
 
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ var (
 func init() {
 	if info, ok := debug.ReadBuildInfo(); ok {
 		for _, mod := range info.Deps {
-			if mod.Path == "github.com/benthosdev/benthos/v4" {
+			if mod.Path == "github.com/nehal119/benthos-119" {
 				Version = mod.Version
 				if mod.Replace != nil {
 					v := mod.Replace.Version

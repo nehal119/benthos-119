@@ -1,8 +1,8 @@
 package input
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	"github.com/benthosdev/benthos/v4/internal/impl/aws/session"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/impl/aws/session"
 )
 
 // DynamoDBCheckpointConfig contains configuration parameters for a DynamoDB

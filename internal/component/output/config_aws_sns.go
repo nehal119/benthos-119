@@ -1,8 +1,8 @@
 package output
 
 import (
-	sess "github.com/benthosdev/benthos/v4/internal/impl/aws/session"
-	"github.com/benthosdev/benthos/v4/internal/metadata"
+	sess "github.com/nehal119/benthos-119/internal/impl/aws/session"
+	"github.com/nehal119/benthos-119/internal/metadata"
 )
 
 // SNSConfig contains configuration fields for the output SNS type.

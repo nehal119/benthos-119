@@ -1,6 +1,6 @@
 package auth
 
-import "github.com/benthosdev/benthos/v4/internal/docs"
+import "github.com/nehal119/benthos-119/internal/docs"
 
 // Description returns a markdown version of NATs authentication documentation.
 func Description() string {

@@ -3,8 +3,8 @@ package field
 import (
 	"strconv"
 
-	"github.com/benthosdev/benthos/v4/internal/bloblang/query"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bloblang/query"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 // Resolver is an interface for resolving a string containing Bloblang function

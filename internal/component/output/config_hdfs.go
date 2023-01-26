@@ -1,6 +1,6 @@
 package output
 
-import "github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
+import "github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
 
 // HDFSConfig contains configuration fields for the HDFS output type.
 type HDFSConfig struct {

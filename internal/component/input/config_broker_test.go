@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/component/input"
-	_ "github.com/benthosdev/benthos/v4/public/components/pure"
+	"github.com/nehal119/benthos-119/internal/component/input"
+	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 
 func TestBrokerConfigDefaults(t *testing.T) {

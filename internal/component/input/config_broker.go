@@ -1,6 +1,6 @@
 package input
 
-import "github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
+import "github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
 
 // BrokerConfig contains configuration fields for the Broker input type.
 type BrokerConfig struct {

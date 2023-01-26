@@ -7,8 +7,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 
-	bsession "github.com/benthosdev/benthos/v4/internal/impl/aws/session"
-	"github.com/benthosdev/benthos/v4/public/service"
+	bsession "github.com/nehal119/benthos-119/internal/impl/aws/session"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 // GetSession attempts to create an AWS session based on the parsedConfig.

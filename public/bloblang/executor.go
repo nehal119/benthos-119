@@ -3,9 +3,9 @@ package bloblang
 import (
 	"errors"
 
-	"github.com/benthosdev/benthos/v4/internal/bloblang/mapping"
-	"github.com/benthosdev/benthos/v4/internal/bloblang/query"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/bloblang/mapping"
+	"github.com/nehal119/benthos-119/internal/bloblang/query"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 // Executor stores a parsed Bloblang mapping and provides APIs for executing it.

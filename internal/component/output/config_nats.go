@@ -1,8 +1,8 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/impl/nats/auth"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/impl/nats/auth"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // NATSConfig contains configuration fields for the NATS output type.

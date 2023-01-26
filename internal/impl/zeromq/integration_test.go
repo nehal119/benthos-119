@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/benthosdev/benthos/v4/internal/integration"
+	"github.com/nehal119/benthos-119/internal/integration"
 )
 
 func TestIntegrationZMQ(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/couchbase/gocb/v2"
 
-	"github.com/benthosdev/benthos/v4/internal/impl/couchbase/client"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/impl/couchbase/client"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 // ErrInvalidTranscoder specified transcoder is not supported.

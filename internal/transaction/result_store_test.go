@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 func TestResultStore(t *testing.T) {

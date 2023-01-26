@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	ibloblang "github.com/benthosdev/benthos/v4/internal/bloblang"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/public/bloblang"
+	ibloblang "github.com/nehal119/benthos-119/internal/bloblang"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/public/bloblang"
 )
 
 func TestMessageCopyAirGap(t *testing.T) {

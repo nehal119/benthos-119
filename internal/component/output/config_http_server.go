@@ -1,6 +1,6 @@
 package output
 
-import "github.com/benthosdev/benthos/v4/internal/httpserver"
+import "github.com/nehal119/benthos-119/internal/httpserver"
 
 // HTTPServerConfig contains configuration fields for the HTTPServer output
 // type.

@@ -1,8 +1,8 @@
 package interop
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 // Unwrap a public *service.ConfigField type into an internal docs.FieldSpec.

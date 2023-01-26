@@ -1,9 +1,9 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	bredis "github.com/benthosdev/benthos/v4/internal/impl/redis/old"
-	"github.com/benthosdev/benthos/v4/internal/metadata"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	bredis "github.com/nehal119/benthos-119/internal/impl/redis/old"
+	"github.com/nehal119/benthos-119/internal/metadata"
 )
 
 // RedisStreamsConfig contains configuration fields for the RedisStreams output type.

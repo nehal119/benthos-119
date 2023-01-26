@@ -8,8 +8,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 // WriterDocs is a static field documentation for output codecs.

@@ -18,9 +18,9 @@ import (
 
 	goavro "github.com/linkedin/goavro/v2"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 // ReaderDocs is a static field documentation for input codecs.

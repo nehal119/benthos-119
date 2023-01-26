@@ -1,14 +1,14 @@
 package config
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/api"
-	tdocs "github.com/benthosdev/benthos/v4/internal/cli/test/docs"
-	"github.com/benthosdev/benthos/v4/internal/component/metrics"
-	"github.com/benthosdev/benthos/v4/internal/component/tracer"
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/log"
-	"github.com/benthosdev/benthos/v4/internal/manager"
-	"github.com/benthosdev/benthos/v4/internal/stream"
+	"github.com/nehal119/benthos-119/internal/api"
+	tdocs "github.com/nehal119/benthos-119/internal/cli/test/docs"
+	"github.com/nehal119/benthos-119/internal/component/metrics"
+	"github.com/nehal119/benthos-119/internal/component/tracer"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/log"
+	"github.com/nehal119/benthos-119/internal/manager"
+	"github.com/nehal119/benthos-119/internal/stream"
 )
 
 // Type is the Benthos service configuration struct.

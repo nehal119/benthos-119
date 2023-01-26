@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/handlers"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 // CORSConfig contains struct configuration for allowing CORS headers.

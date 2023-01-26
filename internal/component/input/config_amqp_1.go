@@ -1,8 +1,8 @@
 package input
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/impl/amqp1/shared"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/impl/amqp1/shared"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // AMQP1Config contains configuration for the AMQP1 input type.

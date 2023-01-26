@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/config"
+	"github.com/nehal119/benthos-119/internal/config"
 
-	_ "github.com/benthosdev/benthos/v4/public/components/pure"
+	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 
 func TestSetOverridesOnNothing(t *testing.T) {

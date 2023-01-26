@@ -3,8 +3,8 @@ package output
 import (
 	"context"
 
-	iprocessor "github.com/benthosdev/benthos/v4/internal/component/processor"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	iprocessor "github.com/nehal119/benthos-119/internal/component/processor"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 // WithPipeline is a type that wraps both an output type and a pipeline type

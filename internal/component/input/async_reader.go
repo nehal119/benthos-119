@@ -9,10 +9,10 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/internal/shutdown"
-	"github.com/benthosdev/benthos/v4/internal/tracing"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/internal/shutdown"
+	"github.com/nehal119/benthos-119/internal/tracing"
 )
 
 // AsyncReader is an input implementation that reads messages from an

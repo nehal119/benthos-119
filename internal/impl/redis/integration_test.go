@@ -11,10 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/integration"
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
-	_ "github.com/benthosdev/benthos/v4/public/components/pure"
+	"github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/integration"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
+	_ "github.com/nehal119/benthos-119/public/components/pure"
 )
 
 func TestIntegrationRedis(t *testing.T) {

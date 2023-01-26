@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/public/bloblang"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/public/bloblang"
 )
 
 func TestMappingCreateCrossfire(t *testing.T) {

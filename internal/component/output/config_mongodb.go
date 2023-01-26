@@ -1,9 +1,9 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	"github.com/benthosdev/benthos/v4/internal/impl/mongodb/client"
-	"github.com/benthosdev/benthos/v4/internal/old/util/retries"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	"github.com/nehal119/benthos-119/internal/impl/mongodb/client"
+	"github.com/nehal119/benthos-119/internal/old/util/retries"
 )
 
 // MongoDBConfig contains config fields for the MongoDB output type.

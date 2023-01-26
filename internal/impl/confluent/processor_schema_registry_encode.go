@@ -17,9 +17,9 @@ import (
 
 	"github.com/linkedin/goavro/v2"
 
-	"github.com/benthosdev/benthos/v4/internal/httpclient"
-	"github.com/benthosdev/benthos/v4/internal/shutdown"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/httpclient"
+	"github.com/nehal119/benthos-119/internal/shutdown"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func schemaRegistryEncoderConfig() *service.ConfigSpec {

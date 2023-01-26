@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/benthosdev/benthos/v4/internal/log"
+	"github.com/nehal119/benthos-119/internal/log"
 
 	"github.com/stretchr/testify/require"
 )

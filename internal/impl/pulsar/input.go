@@ -10,8 +10,8 @@ import (
 
 	"github.com/apache/pulsar-client-go/pulsar"
 
-	"github.com/benthosdev/benthos/v4/internal/component"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/component"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 const (

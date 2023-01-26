@@ -1,7 +1,7 @@
 package input
 
 import (
-	bredis "github.com/benthosdev/benthos/v4/internal/impl/redis/old"
+	bredis "github.com/nehal119/benthos-119/internal/impl/redis/old"
 )
 
 // RedisStreamsConfig contains configuration fields for the RedisStreams input

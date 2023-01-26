@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/template"
-	_ "github.com/benthosdev/benthos/v4/public/components/all"
+	"github.com/nehal119/benthos-119/internal/template"
+	_ "github.com/nehal119/benthos-119/public/components/all"
 )
 
 func TestTemplateTesting(t *testing.T) {

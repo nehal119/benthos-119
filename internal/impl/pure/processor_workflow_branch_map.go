@@ -9,8 +9,8 @@ import (
 
 	"github.com/quipo/dependencysolver"
 
-	"github.com/benthosdev/benthos/v4/internal/bundle"
-	"github.com/benthosdev/benthos/v4/internal/component/processor"
+	"github.com/nehal119/benthos-119/internal/bundle"
+	"github.com/nehal119/benthos-119/internal/component/processor"
 )
 
 type workflowBranch interface {

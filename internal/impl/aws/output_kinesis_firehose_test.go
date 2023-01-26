@@ -12,8 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/firehose/firehoseiface"
 	"github.com/cenkalti/backoff/v4"
 
-	"github.com/benthosdev/benthos/v4/internal/log"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/log"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 type mockKinesisFirehose struct {

@@ -14,10 +14,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/impl/sql"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/impl/sql"
+	"github.com/nehal119/benthos-119/public/service"
 
-	_ "github.com/benthosdev/benthos/v4/public/components/pure/extended"
+	_ "github.com/nehal119/benthos-119/public/components/pure/extended"
 )
 
 func msgEqualStr(t testing.TB, expected string, m *service.Message) {

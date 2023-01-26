@@ -1,8 +1,8 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	bredis "github.com/benthosdev/benthos/v4/internal/impl/redis/old"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	bredis "github.com/nehal119/benthos-119/internal/impl/redis/old"
 )
 
 // RedisListConfig contains configuration fields for the RedisList output type.

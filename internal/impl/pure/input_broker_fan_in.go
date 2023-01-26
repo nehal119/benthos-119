@@ -3,8 +3,8 @@ package pure
 import (
 	"context"
 
-	"github.com/benthosdev/benthos/v4/internal/component/input"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/component/input"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 type fanInInputBroker struct {

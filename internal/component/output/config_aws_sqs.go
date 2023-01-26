@@ -1,10 +1,10 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
-	sess "github.com/benthosdev/benthos/v4/internal/impl/aws/session"
-	"github.com/benthosdev/benthos/v4/internal/metadata"
-	"github.com/benthosdev/benthos/v4/internal/old/util/retries"
+	"github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
+	sess "github.com/nehal119/benthos-119/internal/impl/aws/session"
+	"github.com/nehal119/benthos-119/internal/metadata"
+	"github.com/nehal119/benthos-119/internal/old/util/retries"
 )
 
 // AmazonSQSConfig contains configuration fields for the output AmazonSQS type.

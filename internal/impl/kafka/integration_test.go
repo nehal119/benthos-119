@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/benthosdev/benthos/v4/internal/integration"
+	"github.com/nehal119/benthos-119/internal/integration"
 
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"

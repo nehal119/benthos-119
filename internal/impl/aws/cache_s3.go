@@ -13,8 +13,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/cenkalti/backoff/v4"
 
-	"github.com/benthosdev/benthos/v4/internal/impl/aws/config"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/impl/aws/config"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func s3CacheConfig() *service.ConfigSpec {

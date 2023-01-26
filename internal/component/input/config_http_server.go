@@ -1,8 +1,8 @@
 package input
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/httpserver"
-	"github.com/benthosdev/benthos/v4/internal/metadata"
+	"github.com/nehal119/benthos-119/internal/httpserver"
+	"github.com/nehal119/benthos-119/internal/metadata"
 )
 
 // HTTPServerResponseConfig provides config fields for customising the response

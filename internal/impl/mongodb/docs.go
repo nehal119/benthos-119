@@ -1,9 +1,9 @@
 package mongodb
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/docs"
-	"github.com/benthosdev/benthos/v4/internal/impl/mongodb/client"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/docs"
+	"github.com/nehal119/benthos-119/internal/impl/mongodb/client"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func processorOperationDocs(defaultOperation client.Operation) docs.FieldSpec {

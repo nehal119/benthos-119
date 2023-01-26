@@ -4,9 +4,9 @@ import (
 	"context"
 	"sync"
 
-	"github.com/benthosdev/benthos/v4/internal/component"
-	ioutput "github.com/benthosdev/benthos/v4/internal/component/output"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/component"
+	ioutput "github.com/nehal119/benthos-119/internal/component/output"
+	"github.com/nehal119/benthos-119/internal/message"
 )
 
 var _ ioutput.Sync = &outputWrapper{}

@@ -1,7 +1,7 @@
 package output
 
 import (
-	sftpSetup "github.com/benthosdev/benthos/v4/internal/impl/sftp/shared"
+	sftpSetup "github.com/nehal119/benthos-119/internal/impl/sftp/shared"
 )
 
 // SFTPConfig contains configuration fields for the SFTP output type.

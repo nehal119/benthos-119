@@ -5,7 +5,7 @@ package amqp1
 import (
 	"github.com/Azure/go-amqp"
 
-	"github.com/benthosdev/benthos/v4/internal/impl/amqp1/shared"
+	"github.com/nehal119/benthos-119/internal/impl/amqp1/shared"
 )
 
 func saslToOptFns(s shared.SASLConfig) ([]amqp.ConnOption, error) {

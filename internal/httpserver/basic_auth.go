@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/crypto/scrypt"
 
-	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/nehal119/benthos-119/internal/docs"
 )
 
 const (

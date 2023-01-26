@@ -3,11 +3,11 @@ package pure
 import (
 	"context"
 
-	"github.com/benthosdev/benthos/v4/internal/bloblang/mapping"
-	"github.com/benthosdev/benthos/v4/internal/component/interop"
-	"github.com/benthosdev/benthos/v4/internal/message"
-	"github.com/benthosdev/benthos/v4/public/bloblang"
-	"github.com/benthosdev/benthos/v4/public/service"
+	"github.com/nehal119/benthos-119/internal/bloblang/mapping"
+	"github.com/nehal119/benthos-119/internal/component/interop"
+	"github.com/nehal119/benthos-119/internal/message"
+	"github.com/nehal119/benthos-119/public/bloblang"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func init() {

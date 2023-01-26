@@ -1,9 +1,9 @@
 package output
 
 import (
-	"github.com/benthosdev/benthos/v4/internal/impl/amqp1/shared"
-	"github.com/benthosdev/benthos/v4/internal/metadata"
-	btls "github.com/benthosdev/benthos/v4/internal/tls"
+	"github.com/nehal119/benthos-119/internal/impl/amqp1/shared"
+	"github.com/nehal119/benthos-119/internal/metadata"
+	btls "github.com/nehal119/benthos-119/internal/tls"
 )
 
 // AMQP1Config contains configuration fields for the AMQP1 output type.

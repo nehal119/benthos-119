@@ -2,5 +2,5 @@ package cassandra
 
 import (
 	// Bring in the internal plugin definitions.
-	_ "github.com/benthosdev/benthos/v4/internal/impl/cassandra"
+	_ "github.com/nehal119/benthos-119/internal/impl/cassandra"
 )

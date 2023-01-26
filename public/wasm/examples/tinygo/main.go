@@ -5,7 +5,7 @@ package main
 import (
 	"bytes"
 
-	"github.com/benthosdev/benthos/v4/public/wasm/tinygo"
+	"github.com/nehal119/benthos-119/public/wasm/tinygo"
 )
 
 // main is required for TinyGo to compile to Wasm.

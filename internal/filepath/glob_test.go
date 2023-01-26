@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/benthosdev/benthos/v4/internal/filepath/ifs"
+	"github.com/nehal119/benthos-119/internal/filepath/ifs"
 )
 
 func TestGlobPatterns(t *testing.T) {

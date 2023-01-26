@@ -12,8 +12,8 @@ issues:
 linters-settings:
   errcheck:
     exclude-functions:
-      - (*github.com/benthosdev/benthos/v4/internal/batch.Error).Failed
-      - (*github.com/benthosdev/benthos/v4/public/service.BatchError).Failed
+      - (*github.com/nehal119/benthos-119/internal/batch.Error).Failed
+      - (*github.com/nehal119/benthos-119/public/service.BatchError).Failed
   gocritic:
     enabled-tags:
       - diagnostic

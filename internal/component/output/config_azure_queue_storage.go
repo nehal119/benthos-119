@@ -1,6 +1,6 @@
 package output
 
-import "github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
+import "github.com/nehal119/benthos-119/internal/batch/policy/batchconfig"
 
 // AzureQueueStorageConfig contains configuration fields for the output Azure Queue Storage type.
 type AzureQueueStorageConfig struct {

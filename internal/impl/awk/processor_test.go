@@ -11,11 +11,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/benthosdev/benthos/v4/internal/component/processor"
-	"github.com/benthosdev/benthos/v4/internal/manager/mock"
-	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/nehal119/benthos-119/internal/component/processor"
+	"github.com/nehal119/benthos-119/internal/manager/mock"
+	"github.com/nehal119/benthos-119/internal/message"
 
-	_ "github.com/benthosdev/benthos/v4/internal/impl/awk"
+	_ "github.com/nehal119/benthos-119/internal/impl/awk"
 )
 
 func TestAWKValidation(t *testing.T) {
