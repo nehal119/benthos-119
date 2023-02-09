@@ -221,7 +221,7 @@ func initNormalMode(
 	return
 }
 
-func cmdService(
+func CmdService(
 	confPath string,
 	resourcesPaths []string,
 	confOverrides []string,
