@@ -80,6 +80,7 @@ func NewReader(mainPath string, resourcePaths []string, opts ...OptFunc) *Reader
 	if mainPath != "" {
 		mainPath = filepath.Clean(mainPath)
 	}
+	fmt.Println("in NewReader ")
 	r := &Reader{
 		testSuffix:         "_benthos_test",
 		fs:                 ifs.OS(),
@@ -96,6 +97,7 @@ func NewReader(mainPath string, resourcePaths []string, opts ...OptFunc) *Reader
 	for _, opt := range opts {
 		opt(r)
 	}
+	fmt.Println("reader ", r)
 	return r
 }
 
@@ -143,7 +145,11 @@ func OptUseFS(fs ifs.FS) OptFunc {
 
 // Read a Benthos config from the files and options specified.
 func (r *Reader) Read(conf *Type) (lints []string, err error) {
+	fmt.Println("lints from Read", lints)
+	fmt.Println("err from Read", err)
 	if lints, err = r.readMain(conf); err != nil {
+		fmt.Println("lints from Read 1", lints)
+		fmt.Println("err from Read 1", err)
 		return
 	}
 	r.configFileInfo = resInfoFromConfig(&conf.ResourceConfig)
@@ -151,6 +157,8 @@ func (r *Reader) Read(conf *Type) (lints []string, err error) {
 
 	var rLints []string
 	if rLints, err = r.readResources(&conf.ResourceConfig); err != nil {
+		fmt.Println("lints from Read 2", lints)
+		fmt.Println("err from Read 2", err)
 		return
 	}
 	lints = append(lints, rLints...)
