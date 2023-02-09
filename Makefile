@@ -12,7 +12,8 @@ PATHINSTSERVERLESS = $(DEST_DIR)/serverless
 PATHINSTDOCKER     = $(DEST_DIR)/docker
 DOCKER_IMAGE       ?= jeffail/benthos
 
-VERSION   := $(shell git describe --tags || echo "v0.0.0")
+# VERSION   := $(shell git describe --tags || echo "v0.0.0")
+VERSION 	:= $(echo "v4.11.0")
 VER_CUT   := $(shell echo $(VERSION) | cut -c2-)
 VER_MAJOR := $(shell echo $(VER_CUT) | cut -f1 -d.)
 VER_MINOR := $(shell echo $(VER_CUT) | cut -f2 -d.)
@@ -38,7 +39,7 @@ install: $(APPS)
 deps:
 	@go mod tidy
 
-SOURCE_FILES = $(shell find internal public cmd -type f)
+SOURCE_FILES = $(shell find pkg public cmd -type f)
 TEMPLATE_FILES = $(shell find template -path template/test -prune -o -type f -name "*.yaml")
 
 $(PATHINSTBIN)/%: $(SOURCE_FILES) $(TEMPLATE_FILES)
@@ -88,7 +89,7 @@ fmt:
 
 lint:
 	@go vet $(GO_FLAGS) ./...
-	@golangci-lint -j $(GOMAXPROCS) run --timeout 5m cmd/... internal/... public/...
+	@golangci-lint -j $(GOMAXPROCS) run --timeout 5m cmd/... pkg/... public/...
 
 test: $(APPS)
 	@go test $(GO_FLAGS) -ldflags "$(LD_FLAGS)" -timeout 3m ./...
