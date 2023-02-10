@@ -265,13 +265,16 @@ func (r *Reader) readMain(conf *Type) (lints []string, err error) {
 		var dLints []docs.Lint
 		var modTime time.Time
 		if confBytes, dLints, modTime, err = ReadFileEnvSwap(r.fs, r.mainPath); err != nil {
+			fmt.Println("err in readMain ReadFileEnvSwap", err)
 			return
 		}
+		fmt.Println("dLints error in after READFILEENVSWAP", dLints)
 		for _, l := range dLints {
 			lints = append(lints, l.Error())
 		}
 		r.modTimeLastRead[r.mainPath] = modTime
 		if err = yaml.Unmarshal(confBytes, &rawNode); err != nil {
+			fmt.Println("err in yaml>marshal readMain", err)
 			return
 		}
 	}
