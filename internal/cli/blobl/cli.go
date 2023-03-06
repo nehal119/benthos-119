@@ -111,19 +111,19 @@ Find out more about Bloblang at: https://benthos.dev/docs/guides/bloblang/about`
 	}
 }
 
-type execCache struct {
+type ExecCache struct {
 	msg  message.Batch
 	vars map[string]any
 }
 
-func newExecCache() *execCache {
-	return &execCache{
+func NewExecCache() *ExecCache {
+	return &ExecCache{
 		msg:  message.QuickBatch([][]byte{[]byte(nil)}),
 		vars: map[string]any{},
 	}
 }
 
-func (e *execCache) executeMapping(exec *mapping.Executor, rawInput, prettyOutput bool, input []byte) (string, error) {
+func (e *ExecCache) executeMapping(exec *mapping.Executor, rawInput, prettyOutput bool, input []byte) (string, error) {
 	e.msg.Get(0).SetBytes(input)
 
 	var valuePtr *any
@@ -220,7 +220,7 @@ func run(c *cli.Context) error {
 	file := c.String("file")
 	m := c.Args().First()
 
-	execCache := newExecCache()
+	ExecCache := NewExecCache()
 
 	if len(file) > 0 {
 		if len(m) > 0 {
@@ -281,7 +281,7 @@ func run(c *cli.Context) error {
 					return
 				}
 
-				resultStr, err := execCache.executeMapping(exec, raw, pretty, input)
+				resultStr, err := ExecCache.executeMapping(exec, raw, pretty, input)
 				if err != nil {
 					fmt.Fprintln(os.Stderr, red(fmt.Sprintf("failed to execute map: %v", err)))
 					continue
