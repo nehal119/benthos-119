@@ -158,7 +158,7 @@ func runServer(c *cli.Context) error {
 			return
 		}
 
-		fSync.update(req.Input, req.Mapping)
+		// fSync.update(req.Input, req.Mapping)
 
 		res := struct {
 			ParseError   string `json:"parse_error"`
@@ -199,8 +199,13 @@ func runServer(c *cli.Context) error {
 			InitialInput   string
 			InitialMapping string
 		}{
-			fSync.input(),
-			fSync.mapping(),
+			// fSync.input(),
+			// fSync.mapping(),
+			`{"message":"hello world"}`,
+			`
+root = this
+root.name = "HELLO"
+`,
 		})
 		if err != nil {
 			http.Error(w, "Template error", http.StatusBadGateway)
