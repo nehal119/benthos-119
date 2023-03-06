@@ -123,7 +123,7 @@ func NewExecCache() *ExecCache {
 	}
 }
 
-func (e *ExecCache) executeMapping(exec *mapping.Executor, rawInput, prettyOutput bool, input []byte) (string, error) {
+func (e *ExecCache) ExecuteMapping(exec *mapping.Executor, rawInput, prettyOutput bool, input []byte) (string, error) {
 	e.msg.Get(0).SetBytes(input)
 
 	var valuePtr *any
@@ -281,7 +281,7 @@ func run(c *cli.Context) error {
 					return
 				}
 
-				resultStr, err := ExecCache.executeMapping(exec, raw, pretty, input)
+				resultStr, err := ExecCache.ExecuteMapping(exec, raw, pretty, input)
 				if err != nil {
 					fmt.Fprintln(os.Stderr, red(fmt.Sprintf("failed to execute map: %v", err)))
 					continue
