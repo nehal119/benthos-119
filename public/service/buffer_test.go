@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/nehal119/benthos-119/pkg/component/buffer"
-	"github.com/nehal119/benthos-119/pkg/manager/mock"
-	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/benthosdev/benthos/v4/internal/component/buffer"
+	"github.com/benthosdev/benthos/v4/internal/manager/mock"
+	"github.com/benthosdev/benthos/v4/internal/message"
 )
 
 type memoryBuffer struct {

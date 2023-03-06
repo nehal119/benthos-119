@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/nehal119/benthos-119/pkg/bloblang/mapping"
-	"github.com/nehal119/benthos-119/pkg/bloblang/query"
-	"github.com/nehal119/benthos-119/pkg/message"
-	"github.com/nehal119/benthos-119/public/bloblang"
+	"github.com/benthosdev/benthos/v4/internal/bloblang/mapping"
+	"github.com/benthosdev/benthos/v4/internal/bloblang/query"
+	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/benthosdev/benthos/v4/public/bloblang"
 )
 
 // MessageHandlerFunc is a function signature defining a component that consumes

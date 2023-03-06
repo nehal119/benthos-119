@@ -7,8 +7,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/pkg/docs"
-	btls "github.com/nehal119/benthos-119/pkg/tls"
+	"github.com/benthosdev/benthos/v4/internal/docs"
+	btls "github.com/benthosdev/benthos/v4/internal/tls"
 )
 
 // NewTLSField defines a new object type config field that describes TLS

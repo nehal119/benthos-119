@@ -11,19 +11,19 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/pkg/bundle"
-	"github.com/nehal119/benthos-119/pkg/component/buffer"
-	"github.com/nehal119/benthos-119/pkg/component/cache"
-	"github.com/nehal119/benthos-119/pkg/component/input"
-	"github.com/nehal119/benthos-119/pkg/component/metrics"
-	"github.com/nehal119/benthos-119/pkg/component/output"
-	"github.com/nehal119/benthos-119/pkg/component/processor"
-	"github.com/nehal119/benthos-119/pkg/component/ratelimit"
-	"github.com/nehal119/benthos-119/pkg/component/tracer"
-	"github.com/nehal119/benthos-119/pkg/config"
-	"github.com/nehal119/benthos-119/pkg/docs"
+	"github.com/benthosdev/benthos/v4/internal/bundle"
+	"github.com/benthosdev/benthos/v4/internal/component/buffer"
+	"github.com/benthosdev/benthos/v4/internal/component/cache"
+	"github.com/benthosdev/benthos/v4/internal/component/input"
+	"github.com/benthosdev/benthos/v4/internal/component/metrics"
+	"github.com/benthosdev/benthos/v4/internal/component/output"
+	"github.com/benthosdev/benthos/v4/internal/component/processor"
+	"github.com/benthosdev/benthos/v4/internal/component/ratelimit"
+	"github.com/benthosdev/benthos/v4/internal/component/tracer"
+	"github.com/benthosdev/benthos/v4/internal/config"
+	"github.com/benthosdev/benthos/v4/internal/docs"
 
-	_ "github.com/nehal119/benthos-119/public/components/all"
+	_ "github.com/benthosdev/benthos/v4/public/components/all"
 )
 
 func TestComponentExamples(t *testing.T) {

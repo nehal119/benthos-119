@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/nehal119/benthos-119/pkg/component/metrics"
+	"github.com/benthosdev/benthos/v4/internal/component/metrics"
 )
 
 type closableRateLimit struct {

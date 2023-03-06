@@ -10,10 +10,10 @@ import (
 	"github.com/Jeffail/gabs/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/nehal119/benthos-119/pkg/bloblang/query"
-	"github.com/nehal119/benthos-119/pkg/bundle"
-	"github.com/nehal119/benthos-119/pkg/docs"
-	"github.com/nehal119/benthos-119/pkg/manager"
+	"github.com/benthosdev/benthos/v4/internal/bloblang/query"
+	"github.com/benthosdev/benthos/v4/internal/bundle"
+	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/benthosdev/benthos/v4/internal/manager"
 )
 
 // ConfigField describes a field within a component configuration, to be added
@@ -397,6 +397,23 @@ func (c *ConfigSpec) Field(f *ConfigField) *ConfigSpec {
 
 	c.component.Config.Children = append(c.component.Config.Children, f.field)
 	return c
+}
+
+// Fields sets the specification of multiple field within the config spec, used
+// for linting and generating documentation for the component.
+//
+// If the provided any of the fields have an empty name then they are registered
+// as the value at the root of the config spec.
+//
+// When creating a spec with a struct constructor the fields from that struct
+// will already be inferred. However, setting fields explicitly is sometimes
+// useful for enriching their documentation with more information.
+func (c *ConfigSpec) Fields(fs ...*ConfigField) *ConfigSpec {
+	spec := c
+	for _, f := range fs {
+		spec = c.Field(f)
+	}
+	return spec
 }
 
 // Example adds an example to the plugin configuration spec that demonstrates

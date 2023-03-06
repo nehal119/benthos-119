@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 
-	"github.com/nehal119/benthos-119/public/service"
+	"github.com/benthosdev/benthos/v4/public/service"
 
 	// Import only required Benthos components, switch with `components/all` for
 	// all standard components.
-	_ "github.com/nehal119/benthos-119/public/components/io"
-	_ "github.com/nehal119/benthos-119/public/components/pure"
+	_ "github.com/benthosdev/benthos/v4/public/components/io"
+	_ "github.com/benthosdev/benthos/v4/public/components/pure"
 )
 
 type ReverseProcessor struct {

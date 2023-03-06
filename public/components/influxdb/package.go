@@ -2,5 +2,5 @@ package influxdb
 
 import (
 	// Bring in the internal plugin definitions.
-	_ "github.com/nehal119/benthos-119/pkg/impl/influxdb"
+	_ "github.com/benthosdev/benthos/v4/internal/impl/influxdb"
 )

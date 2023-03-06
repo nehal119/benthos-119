@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/nehal119/benthos-119/pkg/docs"
+	"github.com/benthosdev/benthos/v4/internal/docs"
 )
 
 // NewURLField defines a new config field that describes a string that should

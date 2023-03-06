@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/nehal119/benthos-119/pkg/batch/policy"
-	"github.com/nehal119/benthos-119/pkg/batch/policy/batchconfig"
-	"github.com/nehal119/benthos-119/pkg/bundle"
-	"github.com/nehal119/benthos-119/pkg/component/processor"
-	"github.com/nehal119/benthos-119/pkg/docs"
-	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/benthosdev/benthos/v4/internal/batch/policy"
+	"github.com/benthosdev/benthos/v4/internal/batch/policy/batchconfig"
+	"github.com/benthosdev/benthos/v4/internal/bundle"
+	"github.com/benthosdev/benthos/v4/internal/component/processor"
+	"github.com/benthosdev/benthos/v4/internal/docs"
+	"github.com/benthosdev/benthos/v4/internal/message"
 )
 
 // BatchPolicy describes the mechanisms by which batching should be performed of

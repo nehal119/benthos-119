@@ -12,12 +12,12 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/nehal119/benthos-119/pkg/bloblang"
-	"github.com/nehal119/benthos-119/pkg/bloblang/query"
-	"github.com/nehal119/benthos-119/pkg/message"
-	"github.com/nehal119/benthos-119/pkg/tracing"
+	"github.com/benthosdev/benthos/v4/internal/bloblang"
+	"github.com/benthosdev/benthos/v4/internal/bloblang/query"
+	"github.com/benthosdev/benthos/v4/internal/message"
+	"github.com/benthosdev/benthos/v4/internal/tracing"
 
-	_ "github.com/nehal119/benthos-119/public/components/all"
+	_ "github.com/benthosdev/benthos/v4/public/components/all"
 )
 
 func TestFunctionExamples(t *testing.T) {
@@ -75,6 +75,7 @@ func TestMethodExamples(t *testing.T) {
 	})
 
 	_, err = tmpJSONFile.WriteString(`
+{
   "type":"object",
   "properties":{
     "foo":{

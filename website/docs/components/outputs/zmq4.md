@@ -57,7 +57,7 @@ By default Benthos does not build with components that require linking to extern
 
 ```shell
 # With go
-go install -tags "x_benthos_extra" github.com/nehal119/benthos-119/cmd/benthos@latest
+go install -tags "x_benthos_extra" github.com/benthosdev/benthos/v4/cmd/benthos@latest
 
 # Using make
 make TAGS=x_benthos_extra

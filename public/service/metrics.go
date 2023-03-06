@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sync/atomic"
 
-	"github.com/nehal119/benthos-119/pkg/component/metrics"
+	"github.com/benthosdev/benthos/v4/internal/component/metrics"
 )
 
 // Metrics allows plugin authors to emit custom metrics from components that are
