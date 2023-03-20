@@ -214,6 +214,16 @@ var _ = registerSimpleMethod(
 				e := base64.NewDecoder(base64.StdEncoding, bytes.NewReader(b))
 				return io.ReadAll(e)
 			}
+		case "base64tohex":
+			schemeFn = func(b []byte) ([]byte, error) {
+				p, err := base64.StdEncoding.DecodeString(string(b))
+				if err != nil {
+					// handle error
+					return nil, err
+				}
+				h := hex.EncodeToString(p)
+				return []byte(h), nil
+			}
 		case "base64url":
 			schemeFn = func(b []byte) ([]byte, error) {
 				e := base64.NewDecoder(base64.URLEncoding, bytes.NewReader(b))
