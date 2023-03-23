@@ -20,6 +20,7 @@ import (
 	"hash/crc32"
 	"html"
 	"io"
+	"math"
 	"net/url"
 	"path/filepath"
 	"regexp"
@@ -213,16 +214,6 @@ var _ = registerSimpleMethod(
 			schemeFn = func(b []byte) ([]byte, error) {
 				e := base64.NewDecoder(base64.StdEncoding, bytes.NewReader(b))
 				return io.ReadAll(e)
-			}
-		case "base64tohex":
-			schemeFn = func(b []byte) ([]byte, error) {
-				p, err := base64.StdEncoding.DecodeString(string(b))
-				if err != nil {
-					// handle error
-					return nil, err
-				}
-				h := hex.EncodeToString(p)
-				return []byte(h), nil
 			}
 		case "base64url":
 			schemeFn = func(b []byte) ([]byte, error) {
@@ -1947,6 +1938,74 @@ root.description = this.description.trim()`,
 				return bytes.Trim(t, *cutset), nil
 			}
 			return nil, NewTypeError(v, ValueString)
+		}, nil
+	},
+)
+
+//------------------------------------------------------------------------------
+
+var _ = registerSimpleMethod(
+	NewMethodSpec(
+		"float", "",
+	).InCategory(
+		MethodCategoryEncoding,
+		"Converts a string according to a chosen base size and bit size into float and returns a number result.",
+		NewExampleSpec("",
+			`root.number = this.hexValue.float(16, 32)`,
+			`{"hexValue":"41259120"}`,
+			`{"number":"10.347931"}`,
+		),
+	).
+		Param(ParamInt64("base", "The base size to use for string, it can be `0`, `2` to `36`.")).
+		Param(ParamInt64("bit", "It defines the integer type. it can be `32` or `64`")),
+	func(args *ParsedParams) (simpleMethod, error) {
+		baseValue, err := args.FieldInt64("base")
+		if err != nil {
+			return nil, err
+		}
+		bitSize, err := args.FieldInt64("bit")
+		if err != nil {
+			return nil, err
+		}
+		var schemeFn func(string) (any, error)
+		switch bitSize {
+		case 32:
+			schemeFn = func(b string) (any, error) {
+				n, err := strconv.ParseUint(b, int(baseValue), 32)
+				if err != nil {
+					return nil, err
+				}
+
+				pp := uint32(n)
+				k := math.Float32frombits(pp)
+				return k, nil
+			}
+		case 64:
+			schemeFn = func(b string) (any, error) {
+				n, err := strconv.ParseUint(b, int(baseValue), 64)
+				if err != nil {
+					return nil, err
+				}
+				pp := uint64(n)
+				k := math.Float64frombits(pp)
+				return k, nil
+			}
+		default:
+			return nil, fmt.Errorf("bit size not allowed")
+
+		}
+		return func(v any, ctx FunctionContext) (any, error) {
+			var res any
+			var err error
+			switch t := v.(type) {
+			case string:
+				res, err = schemeFn(t)
+			case []byte:
+				res, err = schemeFn(string(t))
+			default:
+				err = NewTypeError(v, ValueString)
+			}
+			return res, err
 		}, nil
 	},
 )
