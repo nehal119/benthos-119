@@ -35,7 +35,7 @@ func init() {
 	}
 	if info, ok := debug.ReadBuildInfo(); ok {
 		for _, mod := range info.Deps {
-			if mod.Path == "github.com/benthosdev/benthos/v4" {
+			if mod.Path == "github.com/nehal119/benthos-119" {
 				if mod.Version != "(devel)" {
 					Version = mod.Version
 				}
@@ -233,8 +233,8 @@ Either run Benthos as a stream processor or choose a command:
 				_ = cli.ShowAppHelp(c)
 				os.Exit(1)
 			}
-			fmt.Println("in first if action")
-			if code := CmdService(
+
+			if code := cmdService(
 				c.String("config"),
 				c.StringSlice("resources"),
 				c.StringSlice("set"),
@@ -263,14 +263,12 @@ variables have been resolved:
 				Action: func(c *cli.Context) error {
 					_, _, confReader := readConfig(c.String("config"), false, c.StringSlice("resources"), nil, c.StringSlice("set"))
 					conf := config.New()
-					_, err := confReader.Read(&conf)
-					fmt.Println("err in reading cmd", err)
-					if err != nil {
+					if _, err := confReader.Read(&conf); err != nil {
 						fmt.Fprintf(os.Stderr, "Configuration file read error: %v\n", err)
 						os.Exit(1)
 					}
 					var node yaml.Node
-					err = node.Encode(conf)
+					err := node.Encode(conf)
 					if err == nil {
 						sanitConf := docs.NewSanitiseConfig()
 						sanitConf.RemoveTypeField = true
@@ -323,8 +321,7 @@ https://benthos.dev/docs/guides/streams_mode/about`[1:],
 					},
 				},
 				Action: func(c *cli.Context) error {
-					fmt.Println("in second cmd service")
-					os.Exit(CmdService(
+					os.Exit(cmdService(
 						c.String("config"),
 						c.StringSlice("resources"),
 						c.StringSlice("set"),
@@ -353,7 +350,7 @@ https://benthos.dev/docs/guides/streams_mode/about`[1:],
 		_ = cli.ShowAppHelp(context)
 		return err
 	}
-	fmt.Println("os. Args", os.Args)
+
 	_ = app.Run(os.Args)
 }
 

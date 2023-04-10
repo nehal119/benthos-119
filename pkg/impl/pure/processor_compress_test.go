@@ -2,14 +2,14 @@ package pure_test
 
 import (
 	"bytes"
-	"compress/flate"
-	"compress/gzip"
-	"compress/zlib"
 	"context"
 	"reflect"
 	"testing"
 
-	"github.com/golang/snappy"
+	"github.com/klauspost/compress/flate"
+	"github.com/klauspost/compress/gzip"
+	"github.com/klauspost/compress/snappy"
+	"github.com/klauspost/compress/zlib"
 	"github.com/pierrec/lz4/v4"
 
 	"github.com/nehal119/benthos-119/pkg/component/processor"

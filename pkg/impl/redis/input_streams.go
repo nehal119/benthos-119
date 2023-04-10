@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 
 	"github.com/nehal119/benthos-119/pkg/bundle"
 	"github.com/nehal119/benthos-119/pkg/component"
@@ -186,7 +186,7 @@ func (r *redisStreamsReader) sendAcks(ctx context.Context) {
 		if len(ids) == 0 {
 			continue
 		}
-		if err := r.client.XAck(ctx, str, r.conf.ConsumerGroup, ids...).Err(); err != nil {
+		if err := client.XAck(ctx, str, r.conf.ConsumerGroup, ids...).Err(); err != nil {
 			r.log.Errorf("Failed to ack stream %v: %v\n", str, err)
 		}
 	}

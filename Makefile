@@ -14,6 +14,7 @@ DOCKER_IMAGE       ?= jeffail/benthos
 
 # VERSION   := $(shell git describe --tags || echo "v0.0.0")
 VERSION 	:= $(echo "v4.11.0")
+
 VER_CUT   := $(shell echo $(VERSION) | cut -c2-)
 VER_MAJOR := $(shell echo $(VER_CUT) | cut -f1 -d.)
 VER_MINOR := $(shell echo $(VER_CUT) | cut -f2 -d.)

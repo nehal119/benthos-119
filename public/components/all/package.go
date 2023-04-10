@@ -14,6 +14,7 @@ import (
 	_ "github.com/nehal119/benthos-119/public/components/cassandra"
 	_ "github.com/nehal119/benthos-119/public/components/confluent"
 	_ "github.com/nehal119/benthos-119/public/components/couchbase"
+	_ "github.com/nehal119/benthos-119/public/components/crypto"
 	_ "github.com/nehal119/benthos-119/public/components/dgraph"
 	_ "github.com/nehal119/benthos-119/public/components/elasticsearch"
 	_ "github.com/nehal119/benthos-119/public/components/gcp"

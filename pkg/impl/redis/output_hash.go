@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 
 	"github.com/nehal119/benthos-119/pkg/bloblang/field"
 	"github.com/nehal119/benthos-119/pkg/bundle"
