@@ -20,7 +20,6 @@ import (
 	"hash/crc32"
 	"html"
 	"io"
-	"math"
 	"net/url"
 	"path/filepath"
 	"regexp"
@@ -1957,7 +1956,7 @@ var _ = registerSimpleMethod(
 		),
 	).
 		Param(ParamInt64("base", "The base size to use for string, it can be `0`, `2` to `36`.")).
-		Param(ParamInt64("bit", "It defines the integer type. it can be `32` or `64`")),
+		Param(ParamInt64("bit", "It defines the integer type. it can be `0`,`8`,`16`,`32` or `64`")),
 	func(args *ParsedParams) (simpleMethod, error) {
 		baseValue, err := args.FieldInt64("base")
 		if err != nil {
@@ -1969,30 +1968,17 @@ var _ = registerSimpleMethod(
 		}
 		var schemeFn func(string) (any, error)
 		switch bitSize {
-		case 32:
+		case 0, 8, 16, 32, 64:
 			schemeFn = func(b string) (any, error) {
-				n, err := strconv.ParseUint(b, int(baseValue), 32)
+				fmt.Println("b", b)
+				n, err := strconv.ParseInt(b, int(baseValue), int(bitSize))
 				if err != nil {
 					return nil, err
 				}
-
-				pp := uint32(n)
-				k := math.Float32frombits(pp)
-				return k, nil
-			}
-		case 64:
-			schemeFn = func(b string) (any, error) {
-				n, err := strconv.ParseUint(b, int(baseValue), 64)
-				if err != nil {
-					return nil, err
-				}
-				pp := uint64(n)
-				k := math.Float64frombits(pp)
-				return k, nil
+				return n, nil
 			}
 		default:
 			return nil, fmt.Errorf("bit size not allowed")
-
 		}
 		return func(v any, ctx FunctionContext) (any, error) {
 			var res any
