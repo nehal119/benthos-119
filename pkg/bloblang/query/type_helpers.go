@@ -387,6 +387,16 @@ const (
 	maxInt32  = maxUint32 >> 1
 	minInt    = ^int64(maxInt)
 	minInt32  = ^int32(maxInt32)
+
+	maxUint8 = ^uint8(0)
+	// minUint8 = 0
+	maxInt8 = maxUint8 >> 1
+	minInt8 = ^int8(maxInt8)
+
+	maxUint16 = ^uint16(0)
+	minUint16 = 0
+	maxInt16  = maxUint16 >> 1
+	minInt16  = ^int16(maxInt16)
 )
 
 // IToInt takes a boxed value and attempts to extract a number (int64) from it
@@ -443,6 +453,38 @@ func IToInt32(v any) (int32, error) {
 		return 0, errors.New("value is too small to be cast as a 32-bit signed integer")
 	}
 	return int32(i64), nil
+}
+
+// IToInt8 takes a boxed value and attempts to extract a number (int8) from
+// it or parse one.
+func IToInt8(v any) (int8, error) {
+	i8, err := IToInt(v)
+	if err != nil {
+		return 0, err
+	}
+	if i8 > int64(maxInt8) {
+		return 0, errors.New("value is too large to be cast as a 8-bit signed integer")
+	}
+	if i8 < int64(minInt8) {
+		return 0, errors.New("value is too small to be cast as a 8-bit signed integer")
+	}
+	return int8(i8), nil
+}
+
+// IToInt16 takes a boxed value and attempts to extract a number (int16) from
+// it or parse one.
+func IToInt16(v any) (int16, error) {
+	i16, err := IToInt(v)
+	if err != nil {
+		return 0, err
+	}
+	if i16 > int64(maxInt16) {
+		return 0, errors.New("value is too large to be cast as a 16-bit signed integer")
+	}
+	if i16 < int64(minInt16) {
+		return 0, errors.New("value is too small to be cast as a 16-bit signed integer")
+	}
+	return int16(i16), nil
 }
 
 // IToUint takes a boxed value and attempts to extract a number (uint64) from it
@@ -506,6 +548,32 @@ func IToUint32(v any) (uint32, error) {
 		return 0, errors.New("value is too large to be cast as a 32-bit unsigned integer")
 	}
 	return uint32(u64), nil
+}
+
+// IToUint32 takes a boxed value and attempts to extract a number (uint32) from
+// it or parse one.
+func IToUint8(v any) (uint8, error) {
+	u64, err := IToUint(v)
+	if err != nil {
+		return 0, err
+	}
+	if u64 > uint64(maxUint8) {
+		return 0, errors.New("value is too large to be cast as a 32-bit unsigned integer")
+	}
+	return uint8(u64), nil
+}
+
+// IToUint32 takes a boxed value and attempts to extract a number (uint32) from
+// it or parse one.
+func IToUint16(v any) (uint16, error) {
+	u64, err := IToUint(v)
+	if err != nil {
+		return 0, err
+	}
+	if u64 > uint64(maxUint16) {
+		return 0, errors.New("value is too large to be cast as a 32-bit unsigned integer")
+	}
+	return uint16(u64), nil
 }
 
 // IToBool takes a boxed value and attempts to extract a boolean from it or
