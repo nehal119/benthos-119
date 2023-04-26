@@ -1970,7 +1970,6 @@ var _ = registerSimpleMethod(
 		switch bitSize {
 		case 0, 8, 16, 32, 64:
 			schemeFn = func(b string) (any, error) {
-				fmt.Println("b", b)
 				n, err := strconv.ParseInt(b, int(baseValue), int(bitSize))
 				if err != nil {
 					return nil, err
