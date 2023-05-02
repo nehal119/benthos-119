@@ -116,6 +116,67 @@ var _ = registerSimpleMethod(
 )
 
 var _ = registerSimpleMethod(
+	NewMethodSpec("power", "Returns the power of a number.").InCategory(
+		MethodCategoryNumbers, "",
+		NewExampleSpec("square the number",
+			`root.new_value = this.value.power(2)`,
+			`{"value":2}`,
+			`{"new_value":4}`,
+			`{"value":4}`,
+			`{"new_value":16}`,
+		),
+		NewExampleSpec("square root of the number",
+			`root.new_value = this.value.power(0.5)`,
+			`{"value":4}`,
+			`{"new_value":2}`,
+			`{"value":2}`,
+			`{"new_value":1.414}`,
+		),
+	).Param(ParamFloat("exponent", "It defines the float type. it can be any number ")),
+	func(args *ParsedParams) (simpleMethod, error) {
+		exponent, err := args.FieldFloat("exponent")
+		if err != nil {
+			return nil, err
+		}
+		return numberMethod(func(f *float64, i *int64, ui *uint64) (any, error) {
+			var v float64
+			if f != nil {
+				v = *f
+			} else if i != nil {
+				v = float64(*i)
+			} else {
+				v = float64(*ui)
+			}
+			return math.Pow(v, exponent), nil
+		}), nil
+	},
+)
+
+var _ = registerSimpleMethod(
+	NewMethodSpec("exp", "Returns the exponential of a number.").InCategory(
+		MethodCategoryNumbers, "",
+		NewExampleSpec("",
+			`root.new_value = this.value.exp()`,
+			`{"value":5}`,
+			`{"new_value":148.4131591025766}`,
+		),
+	),
+	func(*ParsedParams) (simpleMethod, error) {
+		return numberMethod(func(f *float64, i *int64, ui *uint64) (any, error) {
+			var v float64
+			if f != nil {
+				v = *f
+			} else if i != nil {
+				v = float64(*i)
+			} else {
+				v = float64(*ui)
+			}
+			return math.Exp(v), nil
+		}), nil
+	},
+)
+
+var _ = registerSimpleMethod(
 	NewMethodSpec("log10", "Returns the decimal logarithm of a number.").InCategory(
 		MethodCategoryNumbers, "",
 		NewExampleSpec("",
@@ -240,15 +301,46 @@ var _ = registerSimpleMethod(
 			`{"value":5.9}`,
 			`{"new_value":6}`,
 		),
-	),
-	func(*ParsedParams) (simpleMethod, error) {
+		NewExampleSpec("An optional boolean parameter can be set precision",
+			`root.new_value = this.value.round(2)`,
+			`{"value":5.323534534}`,
+			`{"new_value":5.32}`,
+			`{"value":5.978678}`,
+			`{"new_value":5.98}`,
+		),
+	).Param(ParamInt64("precision", "It defines the integer type. it can be any positive number").Optional()),
+	func(args *ParsedParams) (simpleMethod, error) {
+		precision, err := args.FieldOptionalInt64("precision")
+		if err != nil {
+			return nil, err
+		}
 		return numberMethod(func(f *float64, i *int64, ui *uint64) (any, error) {
 			if f != nil {
-				rounded := math.Round(*f)
-				if i, err := IToInt(rounded); err == nil {
-					return i, nil
+				if precision == nil {
+					rounded := math.Round(*f)
+					if i, err := IToInt(rounded); err == nil {
+						return i, nil
+					}
+					return rounded, nil
+				} else {
+					if *precision > 0 {
+						// when precision value present
+						ratio := math.Pow(10, float64(*precision))
+						rounded := math.Round(*f*ratio) / ratio
+						if i, err := IToInt(rounded); err == nil {
+							return i, nil
+						}
+						return rounded, nil
+					} else {
+						// when precision value is negative
+						// then round to zero
+						rounded := math.Round(*f)
+						if i, err := IToInt(rounded); err == nil {
+							return i, nil
+						}
+						return rounded, nil
+					}
 				}
-				return rounded, nil
 			}
 			if i != nil {
 				return *i, nil
