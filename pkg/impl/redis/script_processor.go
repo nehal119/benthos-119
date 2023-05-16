@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 
 	"github.com/nehal119/benthos-119/pkg/bloblang/query"
 	"github.com/nehal119/benthos-119/public/bloblang"

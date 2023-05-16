@@ -221,7 +221,7 @@ func initNormalMode(
 	return
 }
 
-func CmdService(
+func cmdService(
 	confPath string,
 	resourcesPaths []string,
 	confOverrides []string,
@@ -230,7 +230,6 @@ func CmdService(
 	streamsMode bool,
 	streamsPaths []string,
 ) int {
-
 	mainPath, inferredMainPath, confReader := readConfig(confPath, streamsMode, resourcesPaths, streamsPaths, confOverrides)
 	conf := config.New()
 
@@ -243,6 +242,7 @@ func CmdService(
 	if len(overrideLogLevel) > 0 {
 		conf.Logger.LogLevel = strings.ToUpper(overrideLogLevel)
 	}
+
 	// Logging and stats aggregation.
 	var logger log.Modular
 

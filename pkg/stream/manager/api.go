@@ -436,22 +436,26 @@ func (m *Type) HandleResourceCRUD(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
+	// if r.Method != "POST" {
+	// 	requestErr = fmt.Errorf("verb not supported: %v", r.Method)
+	// 	return
+	// }
+
 	id := mux.Vars(r)["id"]
 	if id == "" {
 		http.Error(w, "Var `id` must be set", http.StatusBadRequest)
 		return
 	}
-	// if r.Method != "POST" {
-	// 	requestErr = fmt.Errorf("verb not supported: %v", r.Method)
-	// 	return
-	// }
+
+	// ctx := r.Context()
+	// var storeFn func(*yaml.Node)
+
 	docType := docs.Type(mux.Vars(r)["type"])
 	switch r.Method {
 	case "POST":
 		ctx := r.Context()
 
 		var storeFn func(*yaml.Node)
-
 		switch docType {
 		case docs.TypeCache:
 			storeFn = func(n *yaml.Node) {
@@ -468,7 +472,6 @@ func (m *Type) HandleResourceCRUD(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				serverErr = m.manager.StoreInput(ctx, id, inputConf)
-
 			}
 		case docs.TypeOutput:
 			storeFn = func(n *yaml.Node) {
@@ -532,6 +535,7 @@ func (m *Type) HandleResourceCRUD(w http.ResponseWriter, r *http.Request) {
 		}
 
 		storeFn(confNode)
+
 	case "DELETE":
 		switch docType {
 		case docs.TypeInput:
@@ -586,9 +590,9 @@ func (m *Type) HandleResourceCRUD(w http.ResponseWriter, r *http.Request) {
 	// 			return
 	// 		}
 
-	// 		w.Header().Set("Content-Type", "application/json")
-	// 		_, _ = w.Write(bodyBytes)
-	// 	})
+	//		w.Header().Set("Content-Type", "application/json")
+	//		_, _ = w.Write(bodyBytes)
+	//	})
 	default:
 		requestErr = fmt.Errorf("verb not supported: %v", r.Method)
 		return
