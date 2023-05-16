@@ -233,7 +233,6 @@ Either run Benthos as a stream processor or choose a command:
 				_ = cli.ShowAppHelp(c)
 				os.Exit(1)
 			}
-
 			if code := cmdService(
 				c.String("config"),
 				c.StringSlice("resources"),
@@ -322,6 +321,7 @@ https://benthos.dev/docs/guides/streams_mode/about`[1:],
 				},
 				Action: func(c *cli.Context) error {
 					os.Exit(cmdService(
+
 						c.String("config"),
 						c.StringSlice("resources"),
 						c.StringSlice("set"),
@@ -350,7 +350,6 @@ https://benthos.dev/docs/guides/streams_mode/about`[1:],
 		_ = cli.ShowAppHelp(context)
 		return err
 	}
-
 	_ = app.Run(os.Args)
 }
 
