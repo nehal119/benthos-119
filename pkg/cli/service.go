@@ -42,7 +42,6 @@ type stoppable interface {
 
 func readConfig(path string, streamsMode bool, resourcesPaths, streamsPaths, overrides []string) (mainPath string, inferred bool, conf *config.Reader) {
 	if path == "" {
-		fmt.Println("if path = '' inside readConfig")
 		// Iterate default config paths
 		for _, dpath := range []string{
 			"/benthos.yaml",
@@ -231,23 +230,11 @@ func CmdService(
 	streamsMode bool,
 	streamsPaths []string,
 ) int {
-	fmt.Println("c.String(config)", confPath)
-	fmt.Println("resource", resourcesPaths)
-	fmt.Println("set", confOverrides)
-	fmt.Println("log.level", overrideLogLevel)
-	fmt.Println("strict", strict)
-	fmt.Println("watcher", watching)
-	fmt.Println("enable streams api", enableStreamsAPI)
-	fmt.Println("names space", namespaceStreamEndpoints)
-	fmt.Println("stream node", streamsMode)
-	fmt.Println("stream node", streamsPaths)
 
 	mainPath, inferredMainPath, confReader := readConfig(confPath, streamsMode, resourcesPaths, streamsPaths, confOverrides)
 	conf := config.New()
 
 	lints, err := confReader.Read(&conf)
-	fmt.Println("err in lints", err)
-	fmt.Println("lints", lints)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Configuration file read error: %v\n", err)
 		return 1
