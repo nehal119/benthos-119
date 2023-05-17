@@ -21,15 +21,11 @@ func franzKafkaOutputConfig() *service.ConfigSpec {
 		Beta().
 		Categories("Services").
 		Version("3.61.0").
-		Summary("An alternative Kafka output using the [Franz Kafka client library](https://github.com/twmb/franz-go).").
+		Summary("A Kafka output using the [Franz Kafka client library](https://github.com/twmb/franz-go).").
 		Description(`
 Writes a batch of messages to Kafka brokers and waits for acknowledgement before propagating it back to the input.
 
-This output is new and experimental, and the existing ` + "`kafka`" + ` input is not going anywhere, but here's some reasons why it might be worth trying this one out:
-
-- You like shiny new stuff
-- You are experiencing issues with the existing ` + "`kafka`" + ` output
-- Someone told you to
+This output often out-performs the traditional ` + "`kafka`" + ` output as well as providing more useful logs and error messages.
 `).
 		Field(service.NewStringListField("seed_brokers").
 			Description("A list of broker addresses to connect to in order to establish connections. If an item of the list contains commas it will be expanded into multiple addresses.").

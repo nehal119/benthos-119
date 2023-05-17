@@ -13,7 +13,7 @@ PATHINSTDOCKER     = $(DEST_DIR)/docker
 DOCKER_IMAGE       ?= jeffail/benthos
 
 # VERSION   := $(shell git describe --tags || echo "v0.0.0")
-VERSION 	:= $(echo "v4.11.0")
+VERSION 	:= $(echo "v4.15.0")
 
 VER_CUT   := $(shell echo $(VERSION) | cut -c2-)
 VER_MAJOR := $(shell echo $(VER_CUT) | cut -f1 -d.)
@@ -41,9 +41,9 @@ deps:
 	@go mod tidy
 
 SOURCE_FILES = $(shell find pkg public cmd -type f)
-TEMPLATE_FILES = $(shell find template -path template/test -prune -o -type f -name "*.yaml")
+TEMPLATE_FILES = $(shell find pkg/impl -type f -name "template_*.yaml")
 
-$(PATHINSTBIN)/%: $(SOURCE_FILES) $(TEMPLATE_FILES)
+$(PATHINSTBIN)/%: $(SOURCE_FILES)
 	@go build $(GO_FLAGS) -tags "$(TAGS)" -ldflags "$(LD_FLAGS) $(VER_FLAGS)" -o $@ ./cmd/$*
 
 $(APPS): %: $(PATHINSTBIN)/%
@@ -51,7 +51,7 @@ $(APPS): %: $(PATHINSTBIN)/%
 TOOLS = benthos_docs_gen
 tools: $(TOOLS)
 
-$(PATHINSTTOOLS)/%: $(SOURCE_FILES) $(TEMPLATE_FILES)
+$(PATHINSTTOOLS)/%: $(SOURCE_FILES)
 	@go build $(GO_FLAGS) -tags "$(TAGS)" -ldflags "$(LD_FLAGS) $(VER_FLAGS)" -o $@ ./cmd/tools/$*
 
 $(TOOLS): %: $(PATHINSTTOOLS)/%
@@ -59,7 +59,7 @@ $(TOOLS): %: $(PATHINSTTOOLS)/%
 SERVERLESS = benthos-lambda
 serverless: $(SERVERLESS)
 
-$(PATHINSTSERVERLESS)/%: $(SOURCE_FILES) $(TEMPLATE_FILES)
+$(PATHINSTSERVERLESS)/%: $(SOURCE_FILES)
 	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 		go build $(GO_FLAGS) -tags "$(TAGS)" -ldflags "$(LD_FLAGS) $(VER_FLAGS)" -o $@ ./cmd/serverless/$*
 	@zip -m -j $@.zip $@
@@ -94,7 +94,7 @@ lint:
 
 test: $(APPS)
 	@go test $(GO_FLAGS) -ldflags "$(LD_FLAGS)" -timeout 3m ./...
-	@$(PATHINSTBIN)/benthos template lint ./template/...
+	@$(PATHINSTBIN)/benthos template lint $(TEMPLATE_FILES)
 	@$(PATHINSTBIN)/benthos test ./config/test/...
 
 test-race: $(APPS)
@@ -113,6 +113,7 @@ clean:
 
 docs: $(APPS) $(TOOLS)
 	@$(PATHINSTTOOLS)/benthos_docs_gen $(DOCS_FLAGS)
-	@$(PATHINSTBIN)/benthos lint --deprecated "./config/**/*.yaml" \
+	@$(PATHINSTBIN)/benthos lint --deprecated "./config/examples/*.yaml" \
 		"$(WEBSITE_DIR)/cookbooks/**/*.md" \
 		"$(WEBSITE_DIR)/docs/**/*.md"
+	@$(PATHINSTBIN)/benthos template lint "./config/template_examples/*.yaml"

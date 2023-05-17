@@ -432,9 +432,9 @@ func IToInt(v any) (int64, error) {
 	case json.Number:
 		return t.Int64()
 	case []byte:
-		return strconv.ParseInt(string(t), 0, 64)
+		return strconv.ParseInt(string(t), 10, 64)
 	case string:
-		return strconv.ParseInt(t, 0, 64)
+		return strconv.ParseInt(t, 10, 64)
 	}
 	return 0, NewTypeError(v, ValueNumber)
 }
@@ -530,9 +530,9 @@ func IToUint(v any) (uint64, error) {
 		}
 		return uint64(i), nil
 	case []byte:
-		return strconv.ParseUint(string(t), 0, 64)
+		return strconv.ParseUint(string(t), 10, 64)
 	case string:
-		return strconv.ParseUint(t, 0, 64)
+		return strconv.ParseUint(t, 10, 64)
 	}
 	return 0, NewTypeError(v, ValueNumber)
 }
@@ -558,12 +558,12 @@ func IToUint8(v any) (uint8, error) {
 		return 0, err
 	}
 	if u64 > uint64(maxUint8) {
-		return 0, errors.New("value is too large to be cast as a 32-bit unsigned integer")
+		return 0, errors.New("value is too large to be cast as a 8-bit unsigned integer")
 	}
 	return uint8(u64), nil
 }
 
-// IToUint32 takes a boxed value and attempts to extract a number (uint32) from
+// IToUint16 takes a boxed value and attempts to extract a number (uint16) from
 // it or parse one.
 func IToUint16(v any) (uint16, error) {
 	u64, err := IToUint(v)
@@ -571,7 +571,7 @@ func IToUint16(v any) (uint16, error) {
 		return 0, err
 	}
 	if u64 > uint64(maxUint16) {
-		return 0, errors.New("value is too large to be cast as a 32-bit unsigned integer")
+		return 0, errors.New("value is too large to be cast as a 16-bit unsigned integer")
 	}
 	return uint16(u64), nil
 }

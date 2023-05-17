@@ -9,7 +9,6 @@ import (
 	"github.com/nehal119/benthos-119/pkg/docs"
 	"github.com/nehal119/benthos-119/pkg/log"
 	"github.com/nehal119/benthos-119/pkg/message"
-	"github.com/nehal119/benthos-119/pkg/tracing"
 )
 
 func init() {
@@ -18,7 +17,7 @@ func init() {
 		if err != nil {
 			return nil, err
 		}
-		return processor.NewV2BatchedToV1Processor("try", p, mgr), nil
+		return processor.NewAutoObservedBatchedProcessor("try", p, mgr), nil
 	}, docs.ComponentSpec{
 		Name: "try",
 		Categories: []string{
@@ -96,7 +95,7 @@ func newTryProc(conf []processor.Config, mgr bundle.NewManagement) (*tryProc, er
 	}, nil
 }
 
-func (p *tryProc) ProcessBatch(ctx context.Context, _ []*tracing.Span, msg message.Batch) ([]message.Batch, error) {
+func (p *tryProc) ProcessBatch(ctx *processor.BatchProcContext, msg message.Batch) ([]message.Batch, error) {
 	resultMsgs := make([]message.Batch, msg.Len())
 	_ = msg.Iter(func(i int, p *message.Part) error {
 		resultMsgs[i] = message.Batch{p}
@@ -104,7 +103,7 @@ func (p *tryProc) ProcessBatch(ctx context.Context, _ []*tracing.Span, msg messa
 	})
 
 	var res error
-	if resultMsgs, res = processor.ExecuteTryAll(ctx, p.children, resultMsgs...); res != nil || len(resultMsgs) == 0 {
+	if resultMsgs, res = processor.ExecuteTryAll(ctx.Context(), p.children, resultMsgs...); res != nil || len(resultMsgs) == 0 {
 		return nil, res
 	}
 

@@ -145,7 +145,6 @@ func runServer(c *cli.Context) error {
 	defer fSync.write()
 
 	mux := http.NewServeMux()
-	ExecCache := NewExecCache()
 
 	mux.HandleFunc("/execute", func(w http.ResponseWriter, r *http.Request) {
 		req := struct {
@@ -184,7 +183,8 @@ func runServer(c *cli.Context) error {
 			return
 		}
 
-		output, err := ExecCache.ExecuteMapping(exec, false, true, []byte(req.Input))
+		execCache := newExecCache()
+		output, err := execCache.executeMapping(exec, false, true, []byte(req.Input))
 		if err != nil {
 			res.MappingError = err.Error()
 		} else {

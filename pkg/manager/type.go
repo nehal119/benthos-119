@@ -283,6 +283,16 @@ func New(conf ResourceConfig, opts ...OptFunc) (*Type, error) {
 	return t, nil
 }
 
+func (t *Type) swapReadWithWriteLock(fn func()) {
+	// Release the read lock, but re-obtain it in defer.
+	t.resourceLock.RUnlock()
+	defer t.resourceLock.RLock()
+
+	t.resourceLock.Lock()
+	fn()
+	t.resourceLock.Unlock()
+}
+
 //------------------------------------------------------------------------------
 
 // ForStream returns a variant of this manager to be used by a particular stream
@@ -293,7 +303,7 @@ func (t *Type) ForStream(id string) bundle.NewManagement {
 
 func (t *Type) forStream(id string) *Type {
 	strArr := strings.Split(id, "_")
-	// fetching session,org,file name from id 
+	// fetching session,org,file name from id
 	// used for logging purpose
 	var sessionName, organisationName, fileName = "", "", ""
 	if len(strArr) > 2 {
@@ -498,8 +508,8 @@ func (t *Type) NewCache(conf cache.Config) (cache.V1, error) {
 // has the same name it is closed and removed _before_ the new one is
 // initialized in order to avoid duplicate connections.
 func (t *Type) StoreCache(ctx context.Context, name string, conf cache.Config) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	c, ok := t.caches[name]
 	if ok && c != nil {
@@ -516,14 +526,16 @@ func (t *Type) StoreCache(ctx context.Context, name string, conf cache.Config) e
 		return err
 	}
 
-	t.caches[name] = newCache
+	t.swapReadWithWriteLock(func() {
+		t.caches[name] = newCache
+	})
 	return nil
 }
 
 // RemoveCache attempts to close and remove an existing cache resource.
 func (t *Type) RemoveCache(ctx context.Context, name string) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	c, exists := t.caches[name]
 	if !exists {
@@ -534,7 +546,9 @@ func (t *Type) RemoveCache(ctx context.Context, name string) error {
 		return err
 	}
 
-	delete(t.caches, name)
+	t.swapReadWithWriteLock(func() {
+		delete(t.caches, name)
+	})
 	return nil
 }
 
@@ -575,8 +589,8 @@ func (t *Type) NewInput(conf input.Config) (input.Streamed, error) {
 // has the same name it is closed and removed _before_ the new one is
 // initialized in order to avoid duplicate connections.
 func (t *Type) StoreInput(ctx context.Context, name string, conf input.Config) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	i, exists := t.inputs[name]
 	if exists && i != nil {
@@ -600,15 +614,17 @@ func (t *Type) StoreInput(ctx context.Context, name string, conf input.Config) e
 	if exists && i != nil {
 		i.swapInput(newInput)
 	} else {
-		t.inputs[name] = wrapInput(newInput)
+		t.swapReadWithWriteLock(func() {
+			t.inputs[name] = wrapInput(newInput)
+		})
 	}
 	return nil
 }
 
 // RemoveInput attempts to close and remove an existing input resource.
 func (t *Type) RemoveInput(ctx context.Context, name string) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	i, exists := t.inputs[name]
 	if !exists {
@@ -619,7 +635,9 @@ func (t *Type) RemoveInput(ctx context.Context, name string) error {
 		return err
 	}
 
-	delete(t.inputs, name)
+	t.swapReadWithWriteLock(func() {
+		delete(t.inputs, name)
+	})
 	return nil
 }
 
@@ -662,8 +680,8 @@ func (t *Type) NewProcessor(conf processor.Config) (processor.V1, error) {
 // resource has the same name it is closed and removed _before_ the new one is
 // initialized in order to avoid duplicate connections.
 func (t *Type) StoreProcessor(ctx context.Context, name string, conf processor.Config) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	p, ok := t.processors[name]
 	if ok && p != nil {
@@ -684,14 +702,16 @@ func (t *Type) StoreProcessor(ctx context.Context, name string, conf processor.C
 		return err
 	}
 
-	t.processors[name] = newProcessor
+	t.swapReadWithWriteLock(func() {
+		t.processors[name] = newProcessor
+	})
 	return nil
 }
 
 // RemoveProcessor attempts to close and remove an existing processor resource.
 func (t *Type) RemoveProcessor(ctx context.Context, name string) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	p, exists := t.processors[name]
 	if !exists {
@@ -702,7 +722,9 @@ func (t *Type) RemoveProcessor(ctx context.Context, name string) error {
 		return err
 	}
 
-	delete(t.processors, name)
+	t.swapReadWithWriteLock(func() {
+		delete(t.processors, name)
+	})
 	return nil
 }
 
@@ -744,8 +766,8 @@ func (t *Type) NewOutput(conf output.Config, pipelines ...processor.PipelineCons
 // has the same name it is closed and removed _before_ the new one is
 // initialized in order to avoid duplicate connections.
 func (t *Type) StoreOutput(ctx context.Context, name string, conf output.Config) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	o, ok := t.outputs[name]
 	if ok && o != nil {
@@ -764,8 +786,13 @@ func (t *Type) StoreOutput(ctx context.Context, name string, conf output.Config)
 
 	tmpOutput, err := t.intoPath("output_resources").NewOutput(conf)
 	if err == nil {
-		if t.outputs[name], err = wrapOutput(tmpOutput); err != nil {
+		var wrappedOutput *outputWrapper
+		if wrappedOutput, err = wrapOutput(tmpOutput); err != nil {
 			tmpOutput.TriggerCloseNow()
+		} else {
+			t.swapReadWithWriteLock(func() {
+				t.outputs[name] = wrappedOutput
+			})
 		}
 	}
 	if err != nil {
@@ -776,8 +803,8 @@ func (t *Type) StoreOutput(ctx context.Context, name string, conf output.Config)
 
 // RemoveOutput attempts to close and remove an existing output resource.
 func (t *Type) RemoveOutput(ctx context.Context, name string) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	o, exists := t.outputs[name]
 	if !exists {
@@ -789,7 +816,9 @@ func (t *Type) RemoveOutput(ctx context.Context, name string) error {
 		return err
 	}
 
-	delete(t.outputs, name)
+	t.swapReadWithWriteLock(func() {
+		delete(t.outputs, name)
+	})
 	return nil
 }
 
@@ -832,8 +861,8 @@ func (t *Type) NewRateLimit(conf ratelimit.Config) (ratelimit.V1, error) {
 // resource has the same name it is closed and removed _before_ the new one is
 // initialized in order to avoid duplicate connections.
 func (t *Type) StoreRateLimit(ctx context.Context, name string, conf ratelimit.Config) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	r, ok := t.rateLimits[name]
 	if ok && r != nil {
@@ -850,14 +879,16 @@ func (t *Type) StoreRateLimit(ctx context.Context, name string, conf ratelimit.C
 		return err
 	}
 
-	t.rateLimits[name] = newRateLimit
+	t.swapReadWithWriteLock(func() {
+		t.rateLimits[name] = newRateLimit
+	})
 	return nil
 }
 
 // RemoveRateLimit attempts to close and remove an existing rate limit resource.
 func (t *Type) RemoveRateLimit(ctx context.Context, name string) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	r, exists := t.rateLimits[name]
 	if !exists {
@@ -868,17 +899,39 @@ func (t *Type) RemoveRateLimit(ctx context.Context, name string) error {
 		return err
 	}
 
-	delete(t.rateLimits, name)
+	t.swapReadWithWriteLock(func() {
+		delete(t.rateLimits, name)
+	})
 	return nil
 }
 
 //------------------------------------------------------------------------------
 
+// CloseObservability attempts to clean up observability (metrics, tracing, etc)
+// components owned by the manager. This should only be called when the manager
+// itself has finished shutting down and when it is the sole owner of the
+// observability components.
+func (t *Type) CloseObservability(ctx context.Context) error {
+	if t.tracer != nil {
+		if shutter, ok := t.tracer.(interface {
+			Shutdown(context.Context) error
+		}); ok {
+			_ = shutter.Shutdown(ctx)
+		}
+	}
+	if t.stats != nil {
+		if err := t.stats.Close(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // TriggerStopConsuming instructs the manager to stop resource inputs and
 // outputs from consuming data. This call does not block.
 func (t *Type) TriggerStopConsuming() {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	for _, c := range t.inputs {
 		c.TriggerStopConsuming()
@@ -891,8 +944,8 @@ func (t *Type) TriggerStopConsuming() {
 // TriggerCloseNow triggers the absolute shut down of this component but should
 // not block the calling goroutine.
 func (t *Type) TriggerCloseNow() {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	for _, c := range t.inputs {
 		c.TriggerCloseNow()
@@ -905,38 +958,48 @@ func (t *Type) TriggerCloseNow() {
 // WaitForClose is a blocking call to wait until the component has finished
 // shutting down and cleaning up resources.
 func (t *Type) WaitForClose(ctx context.Context) error {
-	t.resourceLock.Lock()
-	defer t.resourceLock.Unlock()
+	t.resourceLock.RLock()
+	defer t.resourceLock.RUnlock()
 
 	for k, c := range t.inputs {
 		if err := c.WaitForClose(ctx); err != nil {
 			return fmt.Errorf("resource '%s' failed to cleanly shutdown: %v", k, err)
 		}
-		delete(t.inputs, k)
+		t.swapReadWithWriteLock(func() {
+			delete(t.inputs, k)
+		})
 	}
 	for k, c := range t.caches {
 		if err := c.Close(ctx); err != nil {
 			return fmt.Errorf("resource '%s' failed to cleanly shutdown: %v", k, err)
 		}
-		delete(t.caches, k)
+		t.swapReadWithWriteLock(func() {
+			delete(t.caches, k)
+		})
 	}
 	for k, p := range t.processors {
 		if err := p.Close(ctx); err != nil {
 			return fmt.Errorf("resource '%s' failed to cleanly shutdown: %v", k, err)
 		}
-		delete(t.processors, k)
+		t.swapReadWithWriteLock(func() {
+			delete(t.processors, k)
+		})
 	}
 	for k, c := range t.rateLimits {
 		if err := c.Close(ctx); err != nil {
 			return fmt.Errorf("resource '%s' failed to cleanly shutdown: %v", k, err)
 		}
-		delete(t.rateLimits, k)
+		t.swapReadWithWriteLock(func() {
+			delete(t.rateLimits, k)
+		})
 	}
 	for k, c := range t.outputs {
 		if err := c.WaitForClose(ctx); err != nil {
 			return fmt.Errorf("resource '%s' failed to cleanly shutdown: %v", k, err)
 		}
-		delete(t.outputs, k)
+		t.swapReadWithWriteLock(func() {
+			delete(t.outputs, k)
+		})
 	}
 	return nil
 }

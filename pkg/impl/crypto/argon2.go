@@ -14,9 +14,7 @@ import (
 	"github.com/nehal119/benthos-119/public/bloblang"
 )
 
-var (
-	errInvalidArgon2Hash = errors.New("invalid argon2 hash")
-)
+var errInvalidArgon2Hash = errors.New("invalid argon2 hash")
 
 type argon2Value struct {
 	format  string

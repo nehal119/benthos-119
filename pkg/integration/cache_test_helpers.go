@@ -16,6 +16,7 @@ import (
 	"github.com/nehal119/benthos-119/pkg/component/cache"
 	"github.com/nehal119/benthos-119/pkg/component/metrics"
 	"github.com/nehal119/benthos-119/pkg/config"
+	"github.com/nehal119/benthos-119/pkg/filepath/ifs"
 	"github.com/nehal119/benthos-119/pkg/log"
 	"github.com/nehal119/benthos-119/pkg/manager"
 )
@@ -102,7 +103,7 @@ func CacheTestOptLogging(level string) CacheTestOptFunc {
 		logConf := log.NewConfig()
 		logConf.LogLevel = level
 		var err error
-		env.log, err = log.NewV2(os.Stdout, logConf)
+		env.log, err = log.New(os.Stdout, ifs.OS(), logConf)
 		if err != nil {
 			panic(err)
 		}

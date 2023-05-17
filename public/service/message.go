@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/nehal119/benthos-119/pkg/bloblang/mapping"
 	"github.com/nehal119/benthos-119/pkg/bloblang/query"
@@ -23,7 +24,8 @@ type MessageBatchHandlerFunc func(context.Context, MessageBatch) error
 // pipeline. It is safe to mutate the message via Set methods, but the
 // underlying byte data should not be edited directly.
 type Message struct {
-	part *message.Part
+	part  *message.Part
+	onErr func(err error)
 }
 
 // MessageBatch describes a collection of one or more messages.
@@ -55,6 +57,41 @@ func (b MessageBatch) DeepCopy() MessageBatch {
 	return bCopy
 }
 
+// WalkWithBatchedErrors walks a batch and executes a closure function for each
+// message. If the provided closure returns an error then iteration of the batch
+// is not stopped and instead a *BatchError is created and populated.
+//
+// The one exception to this behaviour is when an error is returned that is
+// considered fatal such as ErrNotConnected, in which case iteration is
+// terminated early and that error is returned immediately.
+//
+// This is a useful pattern for batched outputs that deliver messages
+// individually.
+func (b MessageBatch) WalkWithBatchedErrors(fn func(int, *Message) error) error {
+	if len(b) == 1 {
+		return fn(0, b[0])
+	}
+
+	var batchErr *BatchError
+	for i, m := range b {
+		tmpErr := fn(i, m)
+		if tmpErr != nil {
+			if errors.Is(tmpErr, ErrNotConnected) {
+				return tmpErr
+			}
+			if batchErr == nil {
+				batchErr = NewBatchError(b, tmpErr)
+			}
+			_ = batchErr.Failed(i, tmpErr)
+		}
+	}
+
+	if batchErr != nil {
+		return batchErr
+	}
+	return nil
+}
+
 // NewMessage creates a new message with an initial raw bytes content. The
 // initial content can be nil, which is recommended if you intend to set it with
 // structured contents.
@@ -65,7 +102,7 @@ func NewMessage(content []byte) *Message {
 }
 
 func newMessageFromPart(part *message.Part) *Message {
-	return &Message{part}
+	return &Message{part: part}
 }
 
 // Copy creates a shallow copy of a message that is safe to mutate with Set
@@ -176,6 +213,9 @@ func (m *Message) SetStructuredMut(i any) {
 // error to it as context. Messages marked with errors can be handled using a
 // range of methods outlined in https://www.benthos.dev/docs/configuration/error_handling.
 func (m *Message) SetError(err error) {
+	if m.onErr != nil {
+		m.onErr(err)
+	}
 	m.part.ErrorSet(err)
 }
 

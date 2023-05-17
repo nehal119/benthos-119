@@ -8,7 +8,6 @@ import (
 	"github.com/nehal119/benthos-119/pkg/docs"
 	"github.com/nehal119/benthos-119/pkg/log"
 	"github.com/nehal119/benthos-119/pkg/message"
-	"github.com/nehal119/benthos-119/pkg/tracing"
 )
 
 func init() {
@@ -17,7 +16,7 @@ func init() {
 		if err != nil {
 			return nil, err
 		}
-		return processor.NewV2BatchedToV1Processor("split", p, mgr), nil
+		return processor.NewAutoObservedBatchedProcessor("split", p, mgr), nil
 	}, docs.ComponentSpec{
 		Name: "split",
 		Categories: []string{
@@ -54,7 +53,7 @@ func newSplit(conf processor.SplitConfig, mgr bundle.NewManagement) (*splitProc,
 	}, nil
 }
 
-func (s *splitProc) ProcessBatch(ctx context.Context, _ []*tracing.Span, msg message.Batch) ([]message.Batch, error) {
+func (s *splitProc) ProcessBatch(ctx *processor.BatchProcContext, msg message.Batch) ([]message.Batch, error) {
 	if msg.Len() == 0 {
 		return nil, nil
 	}

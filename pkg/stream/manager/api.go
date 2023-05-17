@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -36,11 +37,14 @@ func (m *Type) registerEndpoints(enableCrud bool) {
 		return
 	}
 	m.manager.RegisterEndpoint(
-		"/streams",
-		"GET: List all streams along with their status and uptimes."+
-			" POST: Post an object of stream ids to stream configs, all"+
-			" streams will be replaced by this new set.",
-		m.HandleStreamsCRUD,
+		"/resources/{type}/{id}",
+		"POST: Create or replace a given resource configuration of a specified type. Types supported are `cache`, `input`, `output`, `processor` and `rate_limit`.",
+		m.HandleResourceCRUD,
+	)
+	m.manager.RegisterEndpoint(
+		"/streams/{id}/stats",
+		"GET a structured JSON object containing metrics for the stream.",
+		m.HandleStreamStats,
 	)
 	m.manager.RegisterEndpoint(
 		"/streams/{id}",
@@ -50,14 +54,11 @@ func (m *Type) registerEndpoints(enableCrud bool) {
 		m.HandleStreamCRUD,
 	)
 	m.manager.RegisterEndpoint(
-		"/streams/{id}/stats",
-		"GET a structured JSON object containing metrics for the stream.",
-		m.HandleStreamStats,
-	)
-	m.manager.RegisterEndpoint(
-		"/resources/{type}/{id}",
-		"POST: Create or replace a given resource configuration of a specified type. Types supported are `cache`, `input`, `output`, `processor` and `rate_limit`.",
-		m.HandleResourceCRUD,
+		"/streams",
+		"GET: List all streams along with their status and uptimes."+
+			" POST: Post an object of stream ids to stream configs, all"+
+			" streams will be replaced by this new set.",
+		m.HandleStreamsCRUD,
 	)
 }
 
@@ -285,9 +286,19 @@ func (m *Type) HandleStreamCRUD(w http.ResponseWriter, r *http.Request) {
 		if confBytes, err = io.ReadAll(r.Body); err != nil {
 			return
 		}
-		confBytes = config.ReplaceEnvVariables(confBytes)
 
-		if r.URL.Query().Get("chilled") != "true" {
+		ignoreLints := r.URL.Query().Get("chilled") == "true"
+
+		if confBytes, err = config.ReplaceEnvVariables(confBytes, os.LookupEnv); err != nil {
+			var errEnvMissing *config.ErrMissingEnvVars
+			if ignoreLints && errors.As(err, &errEnvMissing) {
+				confBytes = errEnvMissing.BestAttempt
+			} else {
+				return
+			}
+		}
+
+		if !ignoreLints {
 			var node yaml.Node
 			if err = yaml.Unmarshal(confBytes, &node); err != nil {
 				return
@@ -436,10 +447,10 @@ func (m *Type) HandleResourceCRUD(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	// if r.Method != "POST" {
-	// 	requestErr = fmt.Errorf("verb not supported: %v", r.Method)
-	// 	return
-	// }
+	if r.Method != "POST" {
+		requestErr = fmt.Errorf("verb not supported: %v", r.Method)
+		return
+	}
 
 	id := mux.Vars(r)["id"]
 	if id == "" {
@@ -447,156 +458,101 @@ func (m *Type) HandleResourceCRUD(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// ctx := r.Context()
-	// var storeFn func(*yaml.Node)
+	ctx := r.Context()
+
+	var storeFn func(*yaml.Node)
 
 	docType := docs.Type(mux.Vars(r)["type"])
-	switch r.Method {
-	case "POST":
-		ctx := r.Context()
-
-		var storeFn func(*yaml.Node)
-		switch docType {
-		case docs.TypeCache:
-			storeFn = func(n *yaml.Node) {
-				cacheConf := cache.NewConfig()
-				if requestErr = n.Decode(&cacheConf); requestErr != nil {
-					return
-				}
-				serverErr = m.manager.StoreCache(ctx, id, cacheConf)
-			}
-		case docs.TypeInput:
-			storeFn = func(n *yaml.Node) {
-				inputConf := input.NewConfig()
-				if requestErr = n.Decode(&inputConf); requestErr != nil {
-					return
-				}
-				serverErr = m.manager.StoreInput(ctx, id, inputConf)
-			}
-		case docs.TypeOutput:
-			storeFn = func(n *yaml.Node) {
-				outputConf := output.NewConfig()
-				if requestErr = n.Decode(&outputConf); requestErr != nil {
-					return
-				}
-				serverErr = m.manager.StoreOutput(ctx, id, outputConf)
-			}
-		case docs.TypeProcessor:
-			storeFn = func(n *yaml.Node) {
-				procConf := processor.NewConfig()
-				if requestErr = n.Decode(&procConf); requestErr != nil {
-					return
-				}
-				serverErr = m.manager.StoreProcessor(ctx, id, procConf)
-			}
-		case docs.TypeRateLimit:
-			storeFn = func(n *yaml.Node) {
-				rlConf := ratelimit.NewConfig()
-				if requestErr = n.Decode(&rlConf); requestErr != nil {
-					return
-				}
-				serverErr = m.manager.StoreRateLimit(ctx, id, rlConf)
-			}
-		default:
-			http.Error(w, "Var `type` must be set to one of `cache`, `input`, `output`, `processor` or `rate_limit`", http.StatusBadRequest)
-			return
-		}
-
-		var confNode *yaml.Node
-		var lints []string
-		{
-			var confBytes []byte
-			if confBytes, requestErr = io.ReadAll(r.Body); requestErr != nil {
+	switch docType {
+	case docs.TypeCache:
+		storeFn = func(n *yaml.Node) {
+			cacheConf := cache.NewConfig()
+			if requestErr = n.Decode(&cacheConf); requestErr != nil {
 				return
 			}
-			confBytes = config.ReplaceEnvVariables(confBytes)
-
-			var node yaml.Node
-			if requestErr = yaml.Unmarshal(confBytes, &node); requestErr != nil {
+			serverErr = m.manager.StoreCache(ctx, id, cacheConf)
+		}
+	case docs.TypeInput:
+		storeFn = func(n *yaml.Node) {
+			inputConf := input.NewConfig()
+			if requestErr = n.Decode(&inputConf); requestErr != nil {
 				return
 			}
-			confNode = &node
-
-			if r.URL.Query().Get("chilled") != "true" {
-				for _, l := range docs.LintYAML(docs.NewLintContext(), docType, &node) {
-					lints = append(lints, l.Error())
-					m.manager.Logger().Infof("Resource '%v' config: %v\n", id, l)
-				}
-			}
+			serverErr = m.manager.StoreInput(ctx, id, inputConf)
 		}
-		if len(lints) > 0 {
-			errBytes, _ := json.Marshal(lintErrors{
-				LintErrs: lints,
-			})
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write(errBytes)
-			return
+	case docs.TypeOutput:
+		storeFn = func(n *yaml.Node) {
+			outputConf := output.NewConfig()
+			if requestErr = n.Decode(&outputConf); requestErr != nil {
+				return
+			}
+			serverErr = m.manager.StoreOutput(ctx, id, outputConf)
 		}
-
-		storeFn(confNode)
-
-	case "DELETE":
-		switch docType {
-		case docs.TypeInput:
-			m.manager.Logger().Infof("deleting resource of type '%v'. name of resource '%v'", docType, id)
-
-			if serverErr = m.manager.RemoveInput(r.Context(), id); serverErr == nil {
-
-				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte("deleted successfully"))
+	case docs.TypeProcessor:
+		storeFn = func(n *yaml.Node) {
+			procConf := processor.NewConfig()
+			if requestErr = n.Decode(&procConf); requestErr != nil {
+				return
 			}
-		case docs.TypeOutput:
-			m.manager.Logger().Infof("deleting resource of type '%v'. name of resource '%v'", docType, id)
-
-			if serverErr = m.manager.RemoveOutput(r.Context(), id); serverErr == nil {
-				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte("deleted successfully"))
-			}
-		case docs.TypeCache:
-			m.manager.Logger().Infof("deleting resource of type '%v'. name of resource '%v'", docType, id)
-
-			if serverErr = m.manager.RemoveCache(r.Context(), id); serverErr == nil {
-				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte("deleted successfully"))
-			}
-		case docs.TypeProcessor:
-			m.manager.Logger().Infof("deleting resource of type '%v'. name of resource '%v'", docType, id)
-
-			if serverErr = m.manager.RemoveProcessor(r.Context(), id); serverErr == nil {
-				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte("deleted successfully"))
-			}
-		case docs.TypeRateLimit:
-			m.manager.Logger().Infof("deleting resource of type '%v'. name of resource '%v'", docType, id)
-
-			if serverErr = m.manager.RemoveRateLimit(r.Context(), id); serverErr == nil {
-				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte("deleted successfully"))
-			}
-		default:
-			http.Error(w, "Var `type` must be set to one of `cache`, `input`, `output`, `processor` or `rate_limit`", http.StatusBadRequest)
-			return
+			serverErr = m.manager.StoreProcessor(ctx, id, procConf)
 		}
-		// serverErr = m.Delete(r.Context(), id)
-	// case "GET":
-	// 	serverErr = m.manager.AccessInput(r.Context(), id, func(i input.Streamed) {
-	// 		var bodyBytes []byte
-	// 		if bodyBytes, serverErr = json.Marshal(struct {
-	// 			Active bool `json:"active"`
-	// 		}{
-	// 			Active: i.Connected(),
-	// 		}); serverErr != nil {
-	// 			return
-	// 		}
-
-	//		w.Header().Set("Content-Type", "application/json")
-	//		_, _ = w.Write(bodyBytes)
-	//	})
+	case docs.TypeRateLimit:
+		storeFn = func(n *yaml.Node) {
+			rlConf := ratelimit.NewConfig()
+			if requestErr = n.Decode(&rlConf); requestErr != nil {
+				return
+			}
+			serverErr = m.manager.StoreRateLimit(ctx, id, rlConf)
+		}
 	default:
-		requestErr = fmt.Errorf("verb not supported: %v", r.Method)
+		http.Error(w, "Var `type` must be set to one of `cache`, `input`, `output`, `processor` or `rate_limit`", http.StatusBadRequest)
 		return
 	}
+
+	var confNode *yaml.Node
+	var lints []string
+	{
+		var confBytes []byte
+		if confBytes, requestErr = io.ReadAll(r.Body); requestErr != nil {
+			return
+		}
+
+		ignoreLints := r.URL.Query().Get("chilled") == "true"
+
+		if confBytes, requestErr = config.ReplaceEnvVariables(confBytes, os.LookupEnv); requestErr != nil {
+			var errEnvMissing *config.ErrMissingEnvVars
+			if ignoreLints && errors.As(requestErr, &errEnvMissing) {
+				confBytes = errEnvMissing.BestAttempt
+				requestErr = nil
+			} else {
+				return
+			}
+		}
+
+		var node yaml.Node
+		if requestErr = yaml.Unmarshal(confBytes, &node); requestErr != nil {
+			return
+		}
+		confNode = &node
+
+		if !ignoreLints {
+			for _, l := range docs.LintYAML(docs.NewLintContext(), docType, &node) {
+				lints = append(lints, l.Error())
+				m.manager.Logger().Infof("Resource '%v' config: %v\n", id, l)
+			}
+		}
+	}
+	if len(lints) > 0 {
+		errBytes, _ := json.Marshal(lintErrors{
+			LintErrs: lints,
+		})
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write(errBytes)
+		return
+	}
+
+	storeFn(confNode)
 }
 
 // HandleStreamStats is an http.HandleFunc for obtaining metrics for a stream.

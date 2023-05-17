@@ -7,7 +7,6 @@ import (
 	"github.com/nehal119/benthos-119/pkg/component/interop"
 	"github.com/nehal119/benthos-119/pkg/component/processor"
 	"github.com/nehal119/benthos-119/pkg/message"
-	"github.com/nehal119/benthos-119/pkg/tracing"
 	"github.com/nehal119/benthos-119/public/bloblang"
 	"github.com/nehal119/benthos-119/public/service"
 )
@@ -120,7 +119,7 @@ pipeline:
 				return nil, err
 			}
 
-			v1Proc := processor.NewV2BatchedToV1Processor("mapping", newMapping(mapping, mgr.Logger()), interop.UnwrapManagement(mgr))
+			v1Proc := processor.NewAutoObservedBatchedProcessor("mapping", newMapping(mapping, mgr.Logger()), interop.UnwrapManagement(mgr))
 			return interop.NewUnwrapInternalBatchProcessor(v1Proc), nil
 		})
 	if err != nil {
@@ -144,13 +143,13 @@ func newMapping(exec *bloblang.Executor, log *service.Logger) *mappingProc {
 	}
 }
 
-func (m *mappingProc) ProcessBatch(ctx context.Context, _ []*tracing.Span, b message.Batch) ([]message.Batch, error) {
+func (m *mappingProc) ProcessBatch(ctx *processor.BatchProcContext, b message.Batch) ([]message.Batch, error) {
 	newBatch := make(message.Batch, 0, len(b))
 	for i, msg := range b {
 		newPart, err := m.exec.MapPart(i, b)
 		if err != nil {
-			m.log.Error(err.Error())
-			msg.ErrorSet(err)
+			ctx.OnError(err, i, msg)
+			m.log.Errorf("%v", err)
 			newBatch = append(newBatch, msg)
 			continue
 		}

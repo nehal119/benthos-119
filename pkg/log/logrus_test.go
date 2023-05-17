@@ -6,6 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/nehal119/benthos-119/pkg/filepath/ifs"
 )
 
 func TestLoggerWith(t *testing.T) {
@@ -20,7 +22,7 @@ func TestLoggerWith(t *testing.T) {
 
 	var buf bytes.Buffer
 
-	logger, err := NewV2(&buf, loggerConfig)
+	logger, err := New(&buf, ifs.OS(), loggerConfig)
 	require.NoError(t, err)
 
 	logger.Warnf("Warning message root module")
@@ -53,7 +55,7 @@ func TestLoggerWithOddArgs(t *testing.T) {
 
 	var buf bytes.Buffer
 
-	logger, err := NewV2(&buf, loggerConfig)
+	logger, err := New(&buf, ifs.OS(), loggerConfig)
 	require.NoError(t, err)
 
 	logger = logger.WithFields(map[string]string{
@@ -81,7 +83,7 @@ func TestLoggerWithNonStringKeys(t *testing.T) {
 
 	var buf bytes.Buffer
 
-	logger, err := NewV2(&buf, loggerConfig)
+	logger, err := New(&buf, ifs.OS(), loggerConfig)
 	require.NoError(t, err)
 
 	logger = logger.WithFields(map[string]string{
@@ -122,7 +124,7 @@ func TestLogLevels(t *testing.T) {
 
 		buf := logCounter{}
 
-		logger, err := NewV2(&buf, loggerConfig)
+		logger, err := New(&buf, ifs.OS(), loggerConfig)
 		require.NoError(t, err)
 
 		logger.Errorln("error test")

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+
 	"github.com/nehal119/benthos-119/pkg/cli"
 
 	// Import all plugins defined within the repo.
@@ -8,5 +10,5 @@ import (
 )
 
 func main() {
-	cli.Run()
+	cli.Run(context.Background())
 }

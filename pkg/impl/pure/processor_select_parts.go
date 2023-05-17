@@ -7,7 +7,6 @@ import (
 	"github.com/nehal119/benthos-119/pkg/component/processor"
 	"github.com/nehal119/benthos-119/pkg/docs"
 	"github.com/nehal119/benthos-119/pkg/message"
-	"github.com/nehal119/benthos-119/pkg/tracing"
 )
 
 func init() {
@@ -16,7 +15,7 @@ func init() {
 		if err != nil {
 			return nil, err
 		}
-		return processor.NewV2BatchedToV1Processor("select_parts", p, mgr), nil
+		return processor.NewAutoObservedBatchedProcessor("select_parts", p, mgr), nil
 	}, docs.ComponentSpec{
 		Name: "select_parts",
 		Categories: []string{
@@ -58,7 +57,7 @@ func newSelectParts(conf processor.SelectPartsConfig, mgr bundle.NewManagement) 
 	}, nil
 }
 
-func (m *selectPartsProc) ProcessBatch(ctx context.Context, spans []*tracing.Span, msg message.Batch) ([]message.Batch, error) {
+func (m *selectPartsProc) ProcessBatch(ctx *processor.BatchProcContext, msg message.Batch) ([]message.Batch, error) {
 	newMsg := message.QuickBatch(nil)
 
 	lParts := msg.Len()
