@@ -2,6 +2,7 @@ package component
 
 import (
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 
 	"github.com/nehal119/benthos-119/pkg/component/metrics"
 	"github.com/nehal119/benthos-119/pkg/log"
@@ -27,7 +28,7 @@ func (m mockObs) Logger() log.Modular {
 }
 
 func (m mockObs) Tracer() trace.TracerProvider {
-	return trace.NewNoopTracerProvider()
+	return noop.NewTracerProvider()
 }
 
 // NoopObservability returns an implementation of Observability that does

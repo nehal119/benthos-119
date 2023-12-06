@@ -38,7 +38,16 @@ You can access these metadata fields using [function interpolation](/docs/config
 			service.NewURLField(urlField).
 				Description("A URL to connect to.").
 				Example("amqp://localhost:5672/").
-				Example("amqps://guest:guest@localhost:5672/"),
+				Example("amqps://guest:guest@localhost:5672/").
+				Deprecated().
+				Optional(),
+			service.NewURLListField(urlsField).
+				Description("A list of URLs to connect to. The first URL to successfully establish a connection will be used until the connection is closed. If an item of the list contains commas it will be expanded into multiple URLs.").
+				Example([]string{"amqp://guest:guest@127.0.0.1:5672/"}).
+				Example([]string{"amqp://127.0.0.1:5672/,amqp://127.0.0.2:5672/"}).
+				Example([]string{"amqp://127.0.0.1:5672/", "amqp://127.0.0.2:5672/"}).
+				Optional().
+				Version("4.23.0"),
 			service.NewStringField(sourceAddrField).
 				Description("The source address to consume from.").
 				Example("/foo").
@@ -51,7 +60,11 @@ You can access these metadata fields using [function interpolation](/docs/config
 				Advanced(),
 			service.NewTLSToggledField(tlsField),
 			saslFieldSpec(),
-		)
+		).LintRule(`
+root = if this.url.or("") == "" && this.urls.or([]).length() == 0 {
+  "field 'urls' must be set"
+}
+`)
 }
 
 func init() {
@@ -67,10 +80,10 @@ func init() {
 //------------------------------------------------------------------------------
 
 type amqp1Reader struct {
-	url        string
+	urls       []string
 	sourceAddr string
 	renewLock  bool
-	connOpts   []amqp.ConnOption
+	connOpts   *amqp.ConnOptions
 	log        *service.Logger
 
 	m    sync.RWMutex
@@ -79,12 +92,31 @@ type amqp1Reader struct {
 
 func amqp1ReaderFromParsed(conf *service.ParsedConfig, mgr *service.Resources) (*amqp1Reader, error) {
 	a := amqp1Reader{
-		log: mgr.Logger(),
+		log:      mgr.Logger(),
+		connOpts: &amqp.ConnOptions{},
 	}
 
-	var err error
-	if a.url, err = conf.FieldString(urlField); err != nil {
+	urlStrs, err := conf.FieldStringList(urlsField)
+	if err != nil {
 		return nil, err
+	}
+
+	for _, u := range urlStrs {
+		for _, splitURL := range strings.Split(u, ",") {
+			if trimmed := strings.TrimSpace(splitURL); len(trimmed) > 0 {
+				a.urls = append(a.urls, trimmed)
+			}
+		}
+	}
+
+	if len(a.urls) == 0 {
+		singleURL, err := conf.FieldString(urlField)
+		if err != nil {
+			return nil, err
+		}
+
+		a.urls = append(a.urls, singleURL)
+
 	}
 
 	if a.sourceAddr, err = conf.FieldString(sourceAddrField); err != nil {
@@ -95,7 +127,7 @@ func amqp1ReaderFromParsed(conf *service.ParsedConfig, mgr *service.Resources) (
 		return nil, err
 	}
 
-	if a.connOpts, err = saslOptFnsFromParsed(conf); err != nil {
+	if err := saslOptFnsFromParsed(conf, a.connOpts); err != nil {
 		return nil, err
 	}
 
@@ -104,7 +136,7 @@ func amqp1ReaderFromParsed(conf *service.ParsedConfig, mgr *service.Resources) (
 		return nil, err
 	}
 	if enabled {
-		a.connOpts = append(a.connOpts, amqp.ConnTLS(true), amqp.ConnTLSConfig(tlsConf))
+		a.connOpts.TLSConfig = tlsConf
 	}
 
 	return &a, nil
@@ -124,21 +156,18 @@ func (a *amqp1Reader) Connect(ctx context.Context) (err error) {
 	}
 
 	// Create client
-	if conn.client, err = amqp.Dial(a.url, a.connOpts...); err != nil {
-		return
+	if conn.client, err = a.reDial(ctx, a.urls); err != nil {
+		return err
 	}
 
 	// Open a session
-	if conn.session, err = conn.client.NewSession(); err != nil {
+	if conn.session, err = conn.client.NewSession(ctx, nil); err != nil {
 		_ = conn.Close(ctx)
 		return
 	}
 
 	// Create a receiver
-	if conn.receiver, err = conn.session.NewReceiver(
-		amqp.LinkSourceAddress(a.sourceAddr),
-		amqp.LinkCredit(10),
-	); err != nil {
+	if conn.receiver, err = conn.session.NewReceiver(ctx, a.sourceAddr, nil); err != nil {
 		_ = conn.Close(ctx)
 		return
 	}
@@ -146,17 +175,15 @@ func (a *amqp1Reader) Connect(ctx context.Context) (err error) {
 	if a.renewLock {
 		managementAddress := a.sourceAddr + "/$management"
 
-		if conn.renewLockSender, err = conn.session.NewSender(
-			amqp.LinkSourceAddress(conn.lockRenewAddressPrefix+lockRenewRequestSuffix),
-			amqp.LinkTargetAddress(managementAddress),
-		); err != nil {
+		if conn.renewLockSender, err = conn.session.NewSender(ctx, managementAddress, &amqp.SenderOptions{
+			SourceAddress: conn.lockRenewAddressPrefix + lockRenewRequestSuffix,
+		}); err != nil {
 			_ = conn.Close(ctx)
 			return
 		}
-		if conn.renewLockReceiver, err = conn.session.NewReceiver(
-			amqp.LinkSourceAddress(managementAddress),
-			amqp.LinkTargetAddress(conn.lockRenewAddressPrefix+lockRenewResponseSuffix),
-		); err != nil {
+		if conn.renewLockReceiver, err = conn.session.NewReceiver(ctx, managementAddress, &amqp.ReceiverOptions{
+			TargetAddress: conn.lockRenewAddressPrefix + lockRenewResponseSuffix,
+		}); err != nil {
 			_ = conn.Close(ctx)
 			return
 		}
@@ -188,16 +215,12 @@ func (a *amqp1Reader) ReadBatch(ctx context.Context) (service.MessageBatch, serv
 	}
 
 	// Receive next message
-	amqpMsg, err := conn.receiver.Receive(ctx)
+	amqpMsg, err := conn.receiver.Receive(ctx, nil)
 	if err != nil {
-		if err == amqp.ErrTimeout || ctx.Err() != nil {
+		if ctx.Err() != nil {
 			err = component.ErrTimeout
 		} else {
-			if dErr, isDetachError := err.(*amqp.DetachError); isDetachError && dErr.RemoteError != nil {
-				a.log.Errorf("Lost connection due to: %v", dErr.RemoteError)
-			} else {
-				a.log.Errorf("Lost connection due to: %v", err)
-			}
+			a.log.Errorf("Lost connection due to: %v", err)
 			_ = a.disconnect(ctx)
 			err = service.ErrNotConnected
 		}
@@ -243,7 +266,11 @@ func (a *amqp1Reader) ReadBatch(ctx context.Context) (service.MessageBatch, serv
 		// TODO: These methods were moved in v0.16.0, but nacking seems broken
 		// (integration tests fail)
 		if res != nil {
-			return conn.receiver.ModifyMessage(ctx, amqpMsg, true, false, amqpMsg.Annotations)
+			return conn.receiver.ModifyMessage(ctx, amqpMsg, &amqp.ModifyMessageOptions{
+				DeliveryFailed:    true,
+				UndeliverableHere: false,
+				Annotations:       amqpMsg.Annotations,
+			})
 		}
 		return conn.receiver.AcceptMessage(ctx, amqpMsg)
 	}, nil
@@ -253,10 +280,30 @@ func (a *amqp1Reader) Close(ctx context.Context) error {
 	return a.disconnect(ctx)
 }
 
+// reDial connection to amqp with one or more fallback URLs.
+func (a *amqp1Reader) reDial(ctx context.Context, urls []string) (conn *amqp.Conn, err error) {
+	for i, url := range urls {
+		conn, err = amqp.Dial(ctx, url, a.connOpts)
+		if err != nil {
+			a.log.With("error", err).Warnf("unable to connect to url %q #%d, trying next", url, i)
+
+			continue
+		}
+
+		a.log.Tracef("successful connection to use %q #%d", url, i)
+
+		return conn, nil
+	}
+
+	a.log.With("error", err).Tracef("unable to connect to any of %d urls, return error", len(a.urls))
+
+	return nil, err
+}
+
 //------------------------------------------------------------------------------
 
 type amqp1Conn struct {
-	client            *amqp.Client
+	client            *amqp.Conn
 	session           *amqp.Session
 	receiver          *amqp.Receiver
 	renewLockReceiver *amqp.Receiver
@@ -392,12 +439,12 @@ func (a *amqp1Reader) renewWithContext(ctx context.Context, msg *amqp.Message) (
 		},
 	}
 
-	err = conn.renewLockSender.Send(ctx, renewMsg)
+	err = conn.renewLockSender.Send(ctx, renewMsg, nil)
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	result, err := conn.renewLockReceiver.Receive(ctx)
+	result, err := conn.renewLockReceiver.Receive(ctx, nil)
 	if err != nil {
 		return time.Time{}, err
 	}

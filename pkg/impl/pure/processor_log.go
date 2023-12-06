@@ -8,7 +8,6 @@ import (
 
 	"github.com/nehal119/benthos-119/pkg/bloblang/field"
 	"github.com/nehal119/benthos-119/pkg/bloblang/mapping"
-	"github.com/nehal119/benthos-119/pkg/bloblang/query"
 	"github.com/nehal119/benthos-119/pkg/bundle"
 	"github.com/nehal119/benthos-119/pkg/component/processor"
 	"github.com/nehal119/benthos-119/pkg/docs"
@@ -136,20 +135,15 @@ func (l *logProcessor) ProcessBatch(ctx *processor.BatchProcContext, msg message
 	_ = msg.Iter(func(i int, _ *message.Part) error {
 		targetLog := l.logger
 		if l.fieldsMapping != nil {
-			v, err := l.fieldsMapping.Exec(query.FunctionContext{
-				Maps:     map[string]query.Function{},
-				Vars:     map[string]any{},
-				Index:    i,
-				MsgBatch: msg,
-			}.WithValueFunc(func() *any {
-				jObj, err := msg.Get(i).AsStructured()
-				if err != nil {
-					return nil
-				}
-				return &jObj
-			}))
+			fieldsMsg, err := l.fieldsMapping.MapPart(i, msg)
 			if err != nil {
 				l.logger.Errorf("Failed to execute fields mapping: %v", err)
+				return nil
+			}
+
+			v, err := fieldsMsg.AsStructured()
+			if err != nil {
+				l.logger.Errorf("Failed to extract fields object: %v", err)
 				return nil
 			}
 

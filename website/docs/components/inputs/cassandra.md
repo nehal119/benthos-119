@@ -32,8 +32,8 @@ Executes a find query and creates a message for each row received.
 input:
   label: ""
   cassandra:
-    addresses: []
-    query: ""
+    addresses: [] # No default (required)
+    query: "" # No default (required)
     timeout: 600ms
 ```
 
@@ -45,17 +45,17 @@ input:
 input:
   label: ""
   cassandra:
-    addresses: []
+    addresses: [] # No default (required)
     password_authenticator:
-      enabled: false
-      username: ""
-      password: ""
-    disable_initial_host_lookup: false
-    query: ""
-    max_retries: 0
+      enabled: false # No default (optional)
+      username: "" # No default (optional)
+      password: "" # No default (optional)
+    disable_initial_host_lookup: false # No default (optional)
+    query: "" # No default (required)
+    max_retries: 0 # No default (optional)
     backoff:
-      initial_interval: ""
-      max_interval: ""
+      initial_interval: "" # No default (optional)
+      max_interval: "" # No default (optional)
     timeout: 600ms
 ```
 
@@ -78,7 +78,9 @@ https://www.freecodecamp.org/news/the-apache-cassandra-beginner-tutorial/
 Then if we want to select everything from the table users_by_country, we should use the configuration below.
 If we specify the stdin output, the result will look like:
 
+```json
 {"age":23,"country":"UK","first_name":"Bob","last_name":"Sandler","user_email":"bob@email.com"}
+```
 
 This configuration also works for Scylla.
 

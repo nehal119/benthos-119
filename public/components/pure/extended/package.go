@@ -15,6 +15,7 @@ import (
 	_ "github.com/nehal119/benthos-119/pkg/impl/lang"
 	_ "github.com/nehal119/benthos-119/pkg/impl/msgpack"
 	_ "github.com/nehal119/benthos-119/pkg/impl/parquet"
+	_ "github.com/nehal119/benthos-119/pkg/impl/protobuf"
 	_ "github.com/nehal119/benthos-119/pkg/impl/pure/extended"
 	_ "github.com/nehal119/benthos-119/pkg/impl/xml"
 )

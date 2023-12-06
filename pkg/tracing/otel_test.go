@@ -7,6 +7,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 
 	"github.com/nehal119/benthos-119/pkg/message"
 )
@@ -23,7 +24,7 @@ func TestInitSpansFromParentTextMap(t *testing.T) {
 		batch := message.Batch([]*message.Part{msgOne, msgTwo})
 
 		otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}))
-		tp := trace.NewNoopTracerProvider()
+		tp := noop.NewTracerProvider()
 
 		err := InitSpansFromParentTextMap(tp, "test", textMap, batch)
 		assert.Nil(t, err)

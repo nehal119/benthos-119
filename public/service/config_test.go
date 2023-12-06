@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -62,7 +63,7 @@ c:
     e: evalue
 `,
 			lints: []docs.Lint{
-				docs.NewLintError(2, docs.LintUnknown, "field not_real not recognised"),
+				docs.NewLintError(2, docs.LintUnknown, errors.New("field not_real not recognised")),
 			},
 		},
 		{
@@ -79,7 +80,7 @@ c:
     e: evalue
 `,
 			lints: []docs.Lint{
-				docs.NewLintError(4, docs.LintUnknown, "field not_real not recognised"),
+				docs.NewLintError(4, docs.LintUnknown, errors.New("field not_real not recognised")),
 			},
 		},
 	}
@@ -91,7 +92,7 @@ c:
 			node, err := NewStreamBuilder().getYAMLNode(confBytes)
 			require.NoError(t, err)
 
-			assert.Equal(t, test.lints, spec.component.Config.Children.LintYAML(docs.NewLintContext(), node))
+			assert.Equal(t, test.lints, spec.component.Config.Children.LintYAML(docs.NewLintContext(docs.NewLintConfig()), node))
 
 			pConf, err := spec.configFromNode(nil, node)
 			require.NoError(t, err)
@@ -353,7 +354,8 @@ b: this is ${! json( } an invalid interp string
 	iConf, err := parsedConfig.FieldInterpolatedString("a")
 	require.NoError(t, err)
 
-	res := iConf.String(NewMessage([]byte("hello world")))
+	res, err := iConf.TryString(NewMessage([]byte("hello world")))
+	require.NoError(t, err)
 	assert.Equal(t, "foo hello world bar", res)
 }
 
@@ -381,10 +383,12 @@ b:
 	iConf, err := parsedConfig.FieldInterpolatedStringMap("a")
 	require.NoError(t, err)
 
-	res := iConf["c"].String(NewMessage([]byte("hello world")))
+	res, err := iConf["c"].TryString(NewMessage([]byte("hello world")))
+	require.NoError(t, err)
 	assert.Equal(t, "foo hello world bar", res)
 
-	res = iConf["d"].String(NewMessage([]byte("hello world")))
+	res, err = iConf["d"].TryString(NewMessage([]byte("hello world")))
+	require.NoError(t, err)
 	assert.Equal(t, "xyzzy hello world baz", res)
 }
 

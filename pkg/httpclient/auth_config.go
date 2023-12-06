@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/nehal119/benthos-119/pkg/filepath/ifs"
@@ -260,37 +261,39 @@ func (oauth OAuthConfig) computeHMAC(
 
 // OAuth2Config holds the configuration parameters for an OAuth2 exchange.
 type OAuth2Config struct {
-	Enabled      bool     `json:"enabled" yaml:"enabled"`
-	ClientKey    string   `json:"client_key" yaml:"client_key"`
-	ClientSecret string   `json:"client_secret" yaml:"client_secret"`
-	TokenURL     string   `json:"token_url" yaml:"token_url"`
-	Scopes       []string `json:"scopes" yaml:"scopes"`
+	Enabled        bool                `json:"enabled" yaml:"enabled"`
+	ClientKey      string              `json:"client_key" yaml:"client_key"`
+	ClientSecret   string              `json:"client_secret" yaml:"client_secret"`
+	TokenURL       string              `json:"token_url" yaml:"token_url"`
+	Scopes         []string            `json:"scopes" yaml:"scopes"`
+	EndpointParams map[string][]string `json:"endpoint_params" yaml:"endpoint_params"`
 }
 
 // NewOAuth2Config returns a new OAuth2Config with default values.
 func NewOAuth2Config() OAuth2Config {
 	return OAuth2Config{
-		Enabled:      false,
-		ClientKey:    "",
-		ClientSecret: "",
-		TokenURL:     "",
-		Scopes:       []string{},
+		Enabled:        false,
+		ClientKey:      "",
+		ClientSecret:   "",
+		TokenURL:       "",
+		Scopes:         []string{},
+		EndpointParams: map[string][]string{},
 	}
 }
 
 // Client returns an http.Client with OAuth2 configured.
-func (oauth OAuth2Config) Client(ctx context.Context) *http.Client {
+func (oauth OAuth2Config) Client(ctx context.Context, base *http.Client) *http.Client {
 	if !oauth.Enabled {
-		var client http.Client
-		return &client
+		return base
 	}
 
 	conf := &clientcredentials.Config{
-		ClientID:     oauth.ClientKey,
-		ClientSecret: oauth.ClientSecret,
-		TokenURL:     oauth.TokenURL,
-		Scopes:       oauth.Scopes,
+		ClientID:       oauth.ClientKey,
+		ClientSecret:   oauth.ClientSecret,
+		TokenURL:       oauth.TokenURL,
+		Scopes:         oauth.Scopes,
+		EndpointParams: oauth.EndpointParams,
 	}
 
-	return conf.Client(ctx)
+	return conf.Client(context.WithValue(ctx, oauth2.HTTPClient, base))
 }

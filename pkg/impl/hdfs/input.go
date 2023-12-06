@@ -2,75 +2,83 @@ package hdfs
 
 import (
 	"context"
-	"errors"
 	"path/filepath"
 
 	"github.com/colinmarc/hdfs"
 
-	"github.com/nehal119/benthos-119/pkg/bundle"
-	"github.com/nehal119/benthos-119/pkg/component"
-	"github.com/nehal119/benthos-119/pkg/component/input"
-	"github.com/nehal119/benthos-119/pkg/component/input/processors"
-	"github.com/nehal119/benthos-119/pkg/component/metrics"
-	"github.com/nehal119/benthos-119/pkg/docs"
-	"github.com/nehal119/benthos-119/pkg/log"
-	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
-func init() {
-	err := bundle.AllInputs.Add(processors.WrapConstructor(func(c input.Config, nm bundle.NewManagement) (input.Streamed, error) {
-		return newHDFSInput(c, nm, nm.Logger(), nm.Metrics())
-	}), docs.ComponentSpec{
-		Name:    "hdfs",
-		Summary: `Reads files from a HDFS directory, where each discrete file will be consumed as a single message payload.`,
-		Description: `
+const (
+	iFieldHosts     = "hosts"
+	iFieldUser      = "user"
+	iFieldDirectory = "directory"
+)
+
+func inputSpec() *service.ConfigSpec {
+	return service.NewConfigSpec().
+		Stable().
+		Categories("Services").
+		Summary(`Reads files from a HDFS directory, where each discrete file will be consumed as a single message payload.`).
+		Description(`
 ### Metadata
 
 This input adds the following metadata fields to each message:
 
-` + "``` text" + `
+`+"``` text"+`
 - hdfs_name
 - hdfs_path
-` + "```" + `
+`+"```"+`
 
 You can access these metadata fields using
-[function interpolation](/docs/configuration/interpolation#bloblang-queries).`,
-		Categories: []string{
-			"Services",
-		},
-		Config: docs.FieldComponent().WithChildren(
-			docs.FieldString("hosts", "A list of target host addresses to connect to.").Array(),
-			docs.FieldString("user", "A user ID to connect as."),
-			docs.FieldString("directory", "The directory to consume from."),
-		).ChildDefaultAndTypesFromStruct(input.NewHDFSConfig()),
-	})
+[function interpolation](/docs/configuration/interpolation#bloblang-queries).`).
+		Fields(
+			service.NewStringListField(iFieldHosts).
+				Description("A list of target host addresses to connect to.").
+				Example("localhost:9000"),
+			service.NewStringField(iFieldUser).
+				Description("A user ID to connect as.").
+				Default(""),
+			service.NewStringField(iFieldDirectory).
+				Description("The directory to consume from."),
+		)
+
+}
+
+func init() {
+	err := service.RegisterInput(
+		"hdfs", inputSpec(),
+		func(conf *service.ParsedConfig, mgr *service.Resources) (out service.Input, err error) {
+			rdr := &hdfsReader{
+				log: mgr.Logger(),
+			}
+			out = rdr
+			if rdr.hosts, err = conf.FieldStringList(iFieldHosts); err != nil {
+				return
+			}
+			if rdr.user, err = conf.FieldString(iFieldUser); err != nil {
+				return
+			}
+			if rdr.directory, err = conf.FieldString(iFieldDirectory); err != nil {
+				return
+			}
+			return
+		})
 	if err != nil {
 		panic(err)
 	}
 }
 
-func newHDFSInput(conf input.Config, mgr bundle.NewManagement, log log.Modular, stats metrics.Type) (input.Streamed, error) {
-	if conf.HDFS.Directory == "" {
-		return nil, errors.New("invalid directory (cannot be empty)")
-	}
-	return input.NewAsyncReader("hdfs", input.NewAsyncPreserver(newHDFSReader(conf.HDFS, log)), mgr)
-}
-
 type hdfsReader struct {
-	conf input.HDFSConfig
+	hosts     []string
+	user      string
+	directory string
 
 	targets []string
 
 	client *hdfs.Client
 
-	log log.Modular
-}
-
-func newHDFSReader(conf input.HDFSConfig, log log.Modular) *hdfsReader {
-	return &hdfsReader{
-		conf: conf,
-		log:  log,
-	}
+	log *service.Logger
 }
 
 func (h *hdfsReader) Connect(ctx context.Context) error {
@@ -79,15 +87,15 @@ func (h *hdfsReader) Connect(ctx context.Context) error {
 	}
 
 	client, err := hdfs.NewClient(hdfs.ClientOptions{
-		Addresses: h.conf.Hosts,
-		User:      h.conf.User,
+		Addresses: h.hosts,
+		User:      h.user,
 	})
 	if err != nil {
 		return err
 	}
 
 	h.client = client
-	targets, err := client.ReadDir(h.conf.Directory)
+	targets, err := client.ReadDir(h.directory)
 	if err != nil {
 		return err
 	}
@@ -98,27 +106,27 @@ func (h *hdfsReader) Connect(ctx context.Context) error {
 		}
 	}
 
-	h.log.Infof("Receiving files from HDFS directory: %v\n", h.conf.Directory)
+	h.log.Infof("Receiving files from HDFS directory: %v\n", h.directory)
 	return nil
 }
 
-func (h *hdfsReader) ReadBatch(ctx context.Context) (message.Batch, input.AsyncAckFn, error) {
+func (h *hdfsReader) Read(ctx context.Context) (*service.Message, service.AckFunc, error) {
 	if len(h.targets) == 0 {
-		return nil, nil, component.ErrTypeClosed
+		return nil, nil, service.ErrEndOfInput
 	}
 
 	fileName := h.targets[0]
 	h.targets = h.targets[1:]
 
-	filePath := filepath.Join(h.conf.Directory, fileName)
+	filePath := filepath.Join(h.directory, fileName)
 	msgBytes, readerr := h.client.ReadFile(filePath)
 	if readerr != nil {
 		return nil, nil, readerr
 	}
 
-	msg := message.QuickBatch([][]byte{msgBytes})
-	msg.Get(0).MetaSetMut("hdfs_name", fileName)
-	msg.Get(0).MetaSetMut("hdfs_path", filePath)
+	msg := service.NewMessage(msgBytes)
+	msg.MetaSetMut("hdfs_name", fileName)
+	msg.MetaSetMut("hdfs_path", filePath)
 	return msg, func(ctx context.Context, err error) error {
 		return nil
 	}, nil
