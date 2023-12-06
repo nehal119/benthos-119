@@ -308,10 +308,10 @@ func lintsFromAny(line int, v any) (lints []Lint) {
 		// internal packages (when possible).
 		var typeInt int64
 		_ = bloblang.NewArgSpec().Int64Var(&typeInt).Extract([]any{t["type"]})
-		lints = append(lints, NewLintError(line, LintType(typeInt), t["what"].(string)))
+		lints = append(lints, NewLintError(line, LintType(typeInt), errors.New(t["what"].(string))))
 	case string:
 		if len(t) > 0 {
-			lints = append(lints, NewLintError(line, LintCustom, t))
+			lints = append(lints, NewLintError(line, LintCustom, errors.New(t)))
 		}
 	}
 	return
@@ -337,7 +337,7 @@ func (f FieldSpec) LinterBlobl(blobl string) FieldSpec {
 	m, err := env.Parse(blobl)
 	if err != nil {
 		f.customLintFn = func(ctx LintContext, line, col int, value any) (lints []Lint) {
-			return []Lint{NewLintError(line, LintCustom, fmt.Sprintf("Field lint mapping itself failed to parse: %v", err))}
+			return []Lint{NewLintError(line, LintCustom, fmt.Errorf("field lint mapping itself failed to parse: %w", err))}
 		}
 		return f
 	}
@@ -350,7 +350,7 @@ func (f FieldSpec) LinterBlobl(blobl string) FieldSpec {
 			if errors.Is(err, bloblang.ErrRootDeleted) {
 				return
 			}
-			return []Lint{NewLintError(line, LintCustom, err.Error())}
+			return []Lint{NewLintError(line, LintCustom, err)}
 		}
 		lints = append(lints, lintsFromAny(line, res)...)
 		return
@@ -392,7 +392,7 @@ let options = %v
 map is_pattern_option {
   let pattern_options = %v
   let parts = this.split(":")
-  root = $parts.length() == 2 && $pattern_options.exists($parts.index(0))
+  root = $parts.length() >= 2 && $pattern_options.exists($parts.index(0))
 }
 # Codec arguments can be chained with a / (i.e. "lines/multipart")
 let value_parts = if this.type() == "string" { this.split("/").map_each(part -> part.lowercase()) } else { [] }
@@ -635,19 +635,14 @@ func ShouldDropDeprecated(b bool) FieldFilter {
 
 //------------------------------------------------------------------------------
 
-// LintContext is provided to linting functions, and provides context about the
-// wider configuration.
-type LintContext struct {
-	// A map of label names to the line they were defined at.
-	LabelsToLine map[string]int
-
+// LintConfig describes which rules apply when linting benthos configs, and also
+// determines which component and bloblang environments are used.
+type LintConfig struct {
 	// Provides documentation for component implementations.
 	DocsProvider Provider
 
 	// Provides an isolated context for Bloblang parsing.
 	BloblangEnv *bloblang.Environment
-
-	// Config fields
 
 	// Reject any deprecated components or fields as linting errors.
 	RejectDeprecated bool
@@ -656,14 +651,28 @@ type LintContext struct {
 	RequireLabels bool
 }
 
+// NewLintConfig creates a default linting config.
+func NewLintConfig() LintConfig {
+	return LintConfig{
+		DocsProvider: DeprecatedProvider,
+		BloblangEnv:  bloblang.GlobalEnvironment().Deactivated(),
+	}
+}
+
+// LintContext is provided to linting functions, and provides context about the
+// wider configuration.
+type LintContext struct {
+	// A map of label names to the line they were defined at.
+	labelsToLine map[string]int
+
+	conf LintConfig
+}
+
 // NewLintContext creates a new linting context.
-func NewLintContext() LintContext {
+func NewLintContext(conf LintConfig) LintContext {
 	return LintContext{
-		LabelsToLine:     map[string]int{},
-		DocsProvider:     DeprecatedProvider,
-		BloblangEnv:      bloblang.GlobalEnvironment().Deactivated(),
-		RejectDeprecated: false,
-		RequireLabels:    false,
+		labelsToLine: map[string]int{},
+		conf:         conf,
 	}
 }
 
@@ -752,8 +761,12 @@ type Lint struct {
 }
 
 // NewLintError returns an error lint.
-func NewLintError(line int, t LintType, msg string) Lint {
-	return Lint{Line: line, Column: 1, Level: LintError, Type: t, What: msg}
+func NewLintError(line int, t LintType, err error) Lint {
+	var inner Lint
+	if errors.As(err, &inner) {
+		return inner
+	}
+	return Lint{Line: line, Column: 1, Level: LintError, Type: t, What: err.Error()}
 }
 
 // NewLintWarning returns a warning lint.

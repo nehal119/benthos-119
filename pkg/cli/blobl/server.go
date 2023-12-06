@@ -27,7 +27,7 @@ import (
 	_ "embed"
 )
 
-//go:embed resources/bloglang_editor_page.html
+//go:embed resources/bloblang_editor_page.html
 var bloblangEditorPage string
 
 func openBrowserAt(url string) {
@@ -183,8 +183,8 @@ func runServer(c *cli.Context) error {
 			return
 		}
 
-		execCache := newExecCache()
-		output, err := execCache.executeMapping(exec, false, true, []byte(req.Input))
+		ExecCache := NewExecCache()
+		output, err := ExecCache.ExecuteMapping(exec, false, true, []byte(req.Input))
 		if err != nil {
 			res.MappingError = err.Error()
 		} else {

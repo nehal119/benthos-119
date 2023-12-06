@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"errors"
 	"sync"
 
-	"github.com/nehal119/benthos-119/pkg/component"
 	ioutput "github.com/nehal119/benthos-119/pkg/component/output"
 	"github.com/nehal119/benthos-119/pkg/message"
 )
@@ -85,11 +83,7 @@ func (a *airGapWriter) Connect(ctx context.Context) error {
 }
 
 func (a *airGapWriter) WriteBatch(ctx context.Context, msg message.Batch) error {
-	err := a.w.Write(ctx, newMessageFromPart(msg.Get(0)))
-	if err != nil && errors.Is(err, ErrNotConnected) {
-		err = component.ErrNotConnected
-	}
-	return err
+	return publicToInternalErr(a.w.Write(ctx, NewInternalMessage(msg.Get(0))))
 }
 
 func (a *airGapWriter) Close(ctx context.Context) error {
@@ -114,15 +108,10 @@ func (a *airGapBatchWriter) Connect(ctx context.Context) error {
 func (a *airGapBatchWriter) WriteBatch(ctx context.Context, msg message.Batch) error {
 	parts := make([]*Message, msg.Len())
 	_ = msg.Iter(func(i int, part *message.Part) error {
-		parts[i] = newMessageFromPart(part)
+		parts[i] = NewInternalMessage(part)
 		return nil
 	})
-	err := a.w.WriteBatch(ctx, parts)
-	if err != nil && errors.Is(err, ErrNotConnected) {
-		err = component.ErrNotConnected
-	}
-	err = fromPublicBatchError(err)
-	return err
+	return publicToInternalErr(a.w.WriteBatch(ctx, parts))
 }
 
 func (a *airGapBatchWriter) Close(ctx context.Context) error {

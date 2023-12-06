@@ -92,6 +92,55 @@ func (b MessageBatch) WalkWithBatchedErrors(fn func(int, *Message) error) error 
 	return nil
 }
 
+// Index mutates the batch in situ such that each message in the batch retains
+// knowledge of where in the batch it currently resides. An indexer is then
+// returned which can be used as a way of re-acquiring the original order of a
+// batch derived from this one even after filtering, duplication and reordering
+// has been done by other components.
+//
+// This can be useful in situations where a batch of messages is going to be
+// mutated outside of the control of this component (by processors, for example)
+// in ways that may change the ordering or presence of messages in the resulting
+// batch. Having an indexer that we created prior to this processing allows us
+// to take the resulting batch and join the messages within to the messages we
+// started with.
+func (b MessageBatch) Index() *Indexer {
+	parts := make(message.Batch, len(b))
+	for i, m := range b {
+		parts[i] = m.part
+	}
+
+	var s *message.SortGroup
+	s, parts = message.NewSortGroup(parts)
+
+	for i, p := range parts {
+		b[i].part = p
+	}
+
+	return &Indexer{
+		wrapped:     s,
+		sourceBatch: b.Copy(),
+	}
+}
+
+// Indexer encapsulates the ability to acquire the original index of a message
+// from a derivative batch as it was when the indexer was created. This can be
+// useful in situations where a batch is being dispatched to processors or
+// outputs and a derivative batch needs to be associated with the origin.
+type Indexer struct {
+	wrapped     *message.SortGroup
+	sourceBatch MessageBatch
+}
+
+// IndexOf attempts to obtain the index of a message as it occurred within the
+// origin batch known at the time the indexer was created. If the message is an
+// orphan and does not originate from that batch then -1 is returned. It is
+// possible that zero, one or more derivative messages yield any given index of
+// the origin batch due to filtering and/or duplication enacted on the batch.
+func (s *Indexer) IndexOf(m *Message) int {
+	return s.wrapped.GetIndex(m.part)
+}
+
 // NewMessage creates a new message with an initial raw bytes content. The
 // initial content can be nil, which is recommended if you intend to set it with
 // structured contents.
@@ -101,8 +150,11 @@ func NewMessage(content []byte) *Message {
 	}
 }
 
-func newMessageFromPart(part *message.Part) *Message {
-	return &Message{part: part}
+// NewInternalMessage returns a message wrapped around an instantiation of the
+// internal message package. This function is for internal use only and intended
+// as a scaffold for internal components migrating to the new APIs.
+func NewInternalMessage(imsg *message.Part) *Message {
+	return &Message{part: imsg}
 }
 
 // Copy creates a shallow copy of a message that is safe to mutate with Set
@@ -308,7 +360,7 @@ func (m *Message) BloblangQuery(blobl *bloblang.Executor) (*Message, error) {
 		return nil, err
 	}
 	if res != nil {
-		return newMessageFromPart(res), nil
+		return NewInternalMessage(res), nil
 	}
 	return nil, nil
 }
@@ -321,9 +373,10 @@ func (m *Message) BloblangQuery(blobl *bloblang.Executor) (*Message, error) {
 // fails. If the mapping results in the root being deleted the returned message
 // will be nil, which indicates it has been filtered.
 //
-// Note that using overlay means certain functions within the Bloblang mapping
-// will behave differently. In the root of the mapping the right-hand keywords
-// `root` and `this` refer to the same mutable root of the output document.
+// Note that using a Mutate execution means certain functions within the
+// Bloblang mapping will behave differently. In the root of the mapping the
+// right-hand keywords `root` and `this` refer to the same mutable root of the
+// output document.
 func (m *Message) BloblangMutate(blobl *bloblang.Executor) (*Message, error) {
 	uw := blobl.XUnwrapper().(interface {
 		Unwrap() *mapping.Executor
@@ -336,7 +389,38 @@ func (m *Message) BloblangMutate(blobl *bloblang.Executor) (*Message, error) {
 		return nil, err
 	}
 	if res != nil {
-		return newMessageFromPart(res), nil
+		return NewInternalMessage(res), nil
+	}
+	return nil, nil
+}
+
+// BloblangMutateFrom executes a parsed Bloblang mapping onto a message where
+// the reference material for the mapping comes from a provided message rather
+// than the target message of the map. Contents of the target message are
+// mutated directly rather than creating an entirely new object.
+//
+// Returns the same message back in a mutated form, or an error if the mapping
+// fails. If the mapping results in the root being deleted the returned message
+// will be nil, which indicates it has been filtered.
+//
+// Note that using a MutateFrom execution means certain functions within the
+// Bloblang mapping will behave differently. In the root of the mapping the
+// right-hand keyword `root` refers to the same mutable root of the output
+// document, but the keyword `this` refers to the message being provided as an
+// argument.
+func (m *Message) BloblangMutateFrom(blobl *bloblang.Executor, from *Message) (*Message, error) {
+	uw := blobl.XUnwrapper().(interface {
+		Unwrap() *mapping.Executor
+	}).Unwrap()
+
+	msg := message.Batch{from.part}
+
+	res, err := uw.MapOnto(m.part, 0, msg)
+	if err != nil {
+		return nil, err
+	}
+	if res != nil {
+		return NewInternalMessage(res), nil
 	}
 	return nil, nil
 }
@@ -363,7 +447,7 @@ func (b MessageBatch) BloblangQuery(index int, blobl *bloblang.Executor) (*Messa
 		return nil, err
 	}
 	if res != nil {
-		return newMessageFromPart(res), nil
+		return NewInternalMessage(res), nil
 	}
 	return nil, nil
 }
@@ -397,7 +481,7 @@ func (b MessageBatch) BloblangMutate(index int, blobl *bloblang.Executor) (*Mess
 		return nil, err
 	}
 	if res != nil {
-		return newMessageFromPart(res), nil
+		return NewInternalMessage(res), nil
 	}
 	return nil, nil
 }

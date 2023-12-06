@@ -18,6 +18,7 @@ import (
 	"github.com/nehal119/benthos-119/pkg/component/metrics"
 	ioutput "github.com/nehal119/benthos-119/pkg/component/output"
 	"github.com/nehal119/benthos-119/pkg/config"
+	"github.com/nehal119/benthos-119/pkg/docs"
 	"github.com/nehal119/benthos-119/pkg/filepath/ifs"
 	"github.com/nehal119/benthos-119/pkg/log"
 	"github.com/nehal119/benthos-119/pkg/manager"
@@ -419,7 +420,7 @@ func initInput(t testing.TB, env *streamTestEnvironment) iinput.Streamed {
 	dec.KnownFields(true)
 	require.NoError(t, dec.Decode(&s))
 
-	lints, err := config.LintBytes(config.LintOptions{}, confBytes)
+	lints, err := config.LintBytes(docs.NewLintConfig(), confBytes)
 	require.NoError(t, err)
 	assert.Empty(t, lints)
 
@@ -448,7 +449,7 @@ func initOutput(t testing.TB, trans <-chan message.Transaction, env *streamTestE
 	dec.KnownFields(true)
 	require.NoError(t, dec.Decode(&s))
 
-	lints, err := config.LintBytes(config.LintOptions{}, confBytes)
+	lints, err := config.LintBytes(docs.NewLintConfig(), confBytes)
 	require.NoError(t, err)
 	assert.Empty(t, lints)
 

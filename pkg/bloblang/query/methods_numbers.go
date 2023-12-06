@@ -7,32 +7,6 @@ import (
 )
 
 var _ = registerSimpleMethod(
-	NewMethodSpec("abs", "Returns the absolute value of a number.").InCategory(
-		MethodCategoryNumbers, "",
-		NewExampleSpec("",
-			`root.new_value = this.value.abs()`,
-			`{"value":5.3}`,
-			`{"new_value":5.3}`,
-			`{"value":-5.9}`,
-			`{"new_value":5.9}`,
-		),
-	),
-	func(*ParsedParams) (simpleMethod, error) {
-		return numberMethod(func(f *float64, i *int64, ui *uint64) (any, error) {
-			var v float64
-			if f != nil {
-				v = *f
-			} else if i != nil {
-				v = float64(*i)
-			} else {
-				v = float64(*ui)
-			}
-			return math.Abs(v), nil
-		}), nil
-	},
-)
-
-var _ = registerSimpleMethod(
 	NewMethodSpec("ceil", "Returns the least integer value greater than or equal to a number. If the resulting value fits within a 64-bit integer then that is returned, otherwise a new floating point number is returned.").InCategory(
 		MethodCategoryNumbers, "",
 		NewExampleSpec("",
@@ -240,15 +214,46 @@ var _ = registerSimpleMethod(
 			`{"value":5.9}`,
 			`{"new_value":6}`,
 		),
-	),
-	func(*ParsedParams) (simpleMethod, error) {
+		NewExampleSpec("An optional boolean parameter can be set precision",
+			`root.new_value = this.value.round(2)`,
+			`{"value":5.323534534}`,
+			`{"new_value":5.32}`,
+			`{"value":5.978678}`,
+			`{"new_value":5.98}`,
+		),
+	).Param(ParamInt64("precision", "It defines the integer type. it can be any positive number").Optional()),
+	func(args *ParsedParams) (simpleMethod, error) {
+		precision, err := args.FieldOptionalInt64("precision")
+		if err != nil {
+			return nil, err
+		}
 		return numberMethod(func(f *float64, i *int64, ui *uint64) (any, error) {
 			if f != nil {
-				rounded := math.Round(*f)
-				if i, err := IToInt(rounded); err == nil {
-					return i, nil
+				if precision == nil {
+					rounded := math.Round(*f)
+					if i, err := IToInt(rounded); err == nil {
+						return i, nil
+					}
+					return rounded, nil
+				} else {
+					if *precision > 0 {
+						// when precision value present
+						ratio := math.Pow(10, float64(*precision))
+						rounded := math.Round(*f*ratio) / ratio
+						if i, err := IToInt(rounded); err == nil {
+							return i, nil
+						}
+						return rounded, nil
+					} else {
+						// when precision value is negative
+						// then round to zero
+						rounded := math.Round(*f)
+						if i, err := IToInt(rounded); err == nil {
+							return i, nil
+						}
+						return rounded, nil
+					}
 				}
-				return rounded, nil
 			}
 			if i != nil {
 				return *i, nil

@@ -40,6 +40,7 @@ import (
 	_ "github.com/nehal119/benthos-119/public/components/pure/extended"
 	_ "github.com/nehal119/benthos-119/public/components/pusher"
 	_ "github.com/nehal119/benthos-119/public/components/redis"
+	_ "github.com/nehal119/benthos-119/public/components/sentry"
 	_ "github.com/nehal119/benthos-119/public/components/sftp"
 	_ "github.com/nehal119/benthos-119/public/components/snowflake"
 	_ "github.com/nehal119/benthos-119/public/components/splunk"

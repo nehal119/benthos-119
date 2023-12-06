@@ -9,6 +9,8 @@ import (
 	"github.com/nehal119/benthos-119/pkg/component/processor"
 	"github.com/nehal119/benthos-119/pkg/manager/mock"
 	"github.com/nehal119/benthos-119/pkg/message"
+	"github.com/nehal119/benthos-119/public/bloblang"
+	"github.com/nehal119/benthos-119/public/service"
 )
 
 func TestParseLogCases(t *testing.T) {
@@ -111,6 +113,14 @@ func TestParseLogRFC5424(t *testing.T) {
 			}
 			if exp, act := test.output, string(msgsOut[0].Get(0).AsBytes()); exp != act {
 				tt.Errorf("Wrong result: %v != %v", act, exp)
+			}
+
+			exe, err := bloblang.Parse(`json("structureddata").map_each(i -> if i.value.type() == "unknown" { throw("kaboom!") })`)
+			if err != nil {
+				tt.Errorf("Failed to parse bloblang: %s", err)
+			}
+			if _, err := service.NewInternalMessage(msgsOut[0].Get(0)).BloblangQuery(exe); err != nil {
+				tt.Errorf("Invalid structureddata field: %s", err)
 			}
 		})
 	}
