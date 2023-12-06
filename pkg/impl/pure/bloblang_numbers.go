@@ -1,242 +1,173 @@
 package pure
 
 import (
+	"math"
+	"strings"
+
 	"github.com/nehal119/benthos-119/pkg/bloblang/query"
 	"github.com/nehal119/benthos-119/public/bloblang"
 )
 
+func registerIntMethod(name, longName, exampleIn, exampleOut string, method func(input any) (any, error)) {
+	replacer := strings.NewReplacer("$NAME", name, "$LONGNAME", longName)
+
+	exampleOneBody := replacer.Replace(`
+root.a = this.a.$NAME()
+root.b = this.b.round().$NAME()
+root.c = this.c.$NAME()
+root.d = this.d.$NAME().catch(0)
+`)
+	exampleOneIO := [2]string{
+		`{"a":12,"b":12.34,"c":"12","d":-12}`,
+		`{"a":12,"b":12,"c":12,"d":-12}`,
+	}
+	if name[0] == 'u' {
+		exampleOneIO[1] = `{"a":12,"b":12,"c":12,"d":0}`
+	}
+
+	if err := bloblang.RegisterMethodV2(name,
+		bloblang.NewPluginSpec().
+			Category(query.MethodCategoryNumbers).
+			Description(replacer.Replace(`
+Converts a numerical type into a $LONGNAME, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
+
+If the value is a string then an attempt will be made to parse it as a $LONGNAME. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value. Please refer to the [`+"`strconv.ParseInt`"+` documentation](https://pkg.go.dev/strconv#ParseInt) for details regarding the supported formats.`)).
+			Example("", exampleOneBody, exampleOneIO).
+			Example("", replacer.Replace(`
+root = this.$NAME()
+`),
+				[2]string{exampleIn, exampleOut},
+			),
+		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
+			return method, nil
+		}); err != nil {
+		panic(err)
+	}
+}
+
 func init() {
-	if err := bloblang.RegisterMethodV2("int64",
+	registerIntMethod(
+		"int64", "64-bit signed integer",
+		`"0xDEADBEEF"`, "3735928559",
+		func(input any) (any, error) {
+			return query.IToInt(input)
+		})
+
+	registerIntMethod(
+		"int32", "32-bit signed integer",
+		`"0xDEAD"`, "57005",
+		func(input any) (any, error) {
+			return query.IToInt32(input)
+		})
+
+	registerIntMethod(
+		"int16", "16-bit signed integer",
+		`"0xDE"`, "222",
+		func(input any) (any, error) {
+			return query.IToInt16(input)
+		})
+
+	registerIntMethod(
+		"int8", "8-bit signed integer",
+		`"0xD"`, "13",
+		func(input any) (any, error) {
+			return query.IToInt8(input)
+		})
+
+	registerIntMethod(
+		"uint64", "64-bit unsigned integer",
+		`"0xDEADBEEF"`, "3735928559",
+		func(input any) (any, error) {
+			return query.IToUint(input)
+		})
+
+	registerIntMethod(
+		"uint32", "32-bit unsigned integer",
+		`"0xDEAD"`, "57005",
+		func(input any) (any, error) {
+			return query.IToUint32(input)
+		})
+
+	registerIntMethod(
+		"uint16", "16-bit unsigned integer",
+		`"0xDE"`, "222",
+		func(input any) (any, error) {
+			return query.IToUint16(input)
+		})
+
+	registerIntMethod(
+		"uint8", "8-bit unsigned integer",
+		`"0xD"`, "13",
+		func(input any) (any, error) {
+			return query.IToUint8(input)
+		})
+
+	if err := bloblang.RegisterMethodV2("float64",
 		bloblang.NewPluginSpec().
 			Category(query.MethodCategoryNumbers).
 			Description(`
-Converts a numerical type into a 64-bit signed integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
+Converts a numerical type into a 64-bit floating point number, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
 
-If the value is a string then an attempt will be made to parse it as a 64-bit integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first. Please refer to the [`+"`strconv.ParseInt`"+` documentation](https://pkg.go.dev/strconv#ParseInt) for details regarding the supported formats.`).
+If the value is a string then an attempt will be made to parse it as a 64-bit floating point number. Please refer to the [`+"`strconv.ParseFloat`"+` documentation](https://pkg.go.dev/strconv#ParseFloat) for details regarding the supported formats.`).
 			Example("", `
-root.a = this.a.int64()
-root.b = this.b.round().int64()
-root.c = this.c.int64()
+root.out = this.in.float64()
 `,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12"}`,
-					`{"a":12,"b":12,"c":12}`,
-				},
-			).
-			Example("", `
-root = this.int64()
-`,
-				[2]string{
-					`"0xDEADBEEF"`,
-					`3735928559`,
-				},
+				[2]string{`{"in":"6.674282313423543523453425345e-11"}`, `{"out":6.674282313423544e-11}`},
 			),
 		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
 			return func(input any) (any, error) {
-				return query.IToInt(input)
+				return query.IToFloat64(input)
 			}, nil
 		}); err != nil {
 		panic(err)
 	}
 
-	if err := bloblang.RegisterMethodV2("int32",
+	if err := bloblang.RegisterMethodV2("float32",
 		bloblang.NewPluginSpec().
 			Category(query.MethodCategoryNumbers).
 			Description(`
-Converts a numerical type into a 32-bit signed integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
+Converts a numerical type into a 32-bit floating point number, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
 
-If the value is a string then an attempt will be made to parse it as a 32-bit integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first. Please refer to the [`+"`strconv.ParseInt`"+` documentation](https://pkg.go.dev/strconv#ParseInt) for details regarding the supported formats.`).
+If the value is a string then an attempt will be made to parse it as a 32-bit floating point number. Please refer to the [`+"`strconv.ParseFloat`"+` documentation](https://pkg.go.dev/strconv#ParseFloat) for details regarding the supported formats.`).
 			Example("", `
-root.a = this.a.int32()
-root.b = this.b.round().int32()
-root.c = this.c.int32()
+root.out = this.in.float32()
 `,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12"}`,
-					`{"a":12,"b":12,"c":12}`,
-				},
-			).
-			Example("", `
-root = this.int32()
-`,
-				[2]string{
-					`"0xB70B"`,
-					`46859`,
-				},
+				[2]string{`{"in":"6.674282313423543523453425345e-11"}`, `{"out":6.674283e-11}`},
 			),
 		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
 			return func(input any) (any, error) {
-				return query.IToInt32(input)
+				return query.IToFloat32(input)
 			}, nil
 		}); err != nil {
 		panic(err)
 	}
 
-	if err := bloblang.RegisterMethodV2("uint64",
+	if err := bloblang.RegisterMethodV2("abs",
 		bloblang.NewPluginSpec().
 			Category(query.MethodCategoryNumbers).
-			Description(`
-Converts a numerical type into a 64-bit unsigned integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
-
-If the value is a string then an attempt will be made to parse it as a 64-bit unsigned integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first. Please refer to the [`+"`strconv.ParseInt`"+` documentation](https://pkg.go.dev/strconv#ParseInt) for details regarding the supported formats.`).
+			Description(`Returns the absolute value of an int64 or float64 number. As a special case, when an integer is provided that is the minimum value it is converted to the maximum value.`).
 			Example("", `
-root.a = this.a.uint64()
-root.b = this.b.round().uint64()
-root.c = this.c.uint64()
-root.d = this.d.uint64().catch(0)
+root.outs = this.ins.map_each(ele -> ele.abs())
 `,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12","d":-12}`,
-					`{"a":12,"b":12,"c":12,"d":0}`,
-				},
-			).
-			Example("", `
-root = this.uint64()
-`,
-				[2]string{
-					`"0xDEADBEEF"`,
-					`3735928559`,
-				},
+				[2]string{`{"ins":[9,-18,1.23,-4.56]}`, `{"outs":[9,18,1.23,4.56]}`},
 			),
 		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
 			return func(input any) (any, error) {
-				return query.IToUint(input)
-			}, nil
-		}); err != nil {
-		panic(err)
-	}
-
-	if err := bloblang.RegisterMethodV2("uint32",
-		bloblang.NewPluginSpec().
-			Category(query.MethodCategoryNumbers).
-			Description(`
-Converts a numerical type into a 32-bit unsigned integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
-
-If the value is a string then an attempt will be made to parse it as a 32-bit unsigned integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first. Please refer to the [`+"`strconv.ParseInt`"+` documentation](https://pkg.go.dev/strconv#ParseInt) for details regarding the supported formats.`).
-			Example("", `
-root.a = this.a.uint32()
-root.b = this.b.round().uint32()
-root.c = this.c.uint32()
-root.d = this.d.uint32().catch(0)
-`,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12","d":-12}`,
-					`{"a":12,"b":12,"c":12,"d":0}`,
-				},
-			).
-			Example("", `
-root = this.uint32()
-`,
-				[2]string{
-					`"0xB70B"`,
-					`46859`,
-				},
-			),
-		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
-			return func(input any) (any, error) {
-				return query.IToUint32(input)
-			}, nil
-		}); err != nil {
-		panic(err)
-	}
-
-	if err := bloblang.RegisterMethodV2("uint8",
-		bloblang.NewPluginSpec().
-			Category(query.MethodCategoryNumbers).
-			Description(`
-Converts a numerical type into a 8-bit unsigned integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
-
-If the value is a string then an attempt will be made to parse it as a 32-bit unsigned integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first.`).
-			Example("", `
-root.a = this.a.uint8()
-root.b = this.b.round().uint8()
-root.c = this.c.uint8()
-root.d = this.d.uint8().catch(0)
-`,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12","d":-12}`,
-					`{"a":12,"b":12,"c":12,"d":0}`,
-				},
-			),
-		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
-			return func(input any) (any, error) {
-				return query.IToUint8(input)
-			}, nil
-		}); err != nil {
-		panic(err)
-	}
-
-	if err := bloblang.RegisterMethodV2("uint16",
-		bloblang.NewPluginSpec().
-			Category(query.MethodCategoryNumbers).
-			Description(`
-Converts a numerical type into a 16-bit unsigned integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
-
-If the value is a string then an attempt will be made to parse it as a 32-bit unsigned integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first.`).
-			Example("", `
-root.a = this.a.uint16()
-root.b = this.b.round().uint16()
-root.c = this.c.uint16()
-root.d = this.d.uint16().catch(0)
-`,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12","d":-12}`,
-					`{"a":12,"b":12,"c":12,"d":0}`,
-				},
-			),
-		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
-			return func(input any) (any, error) {
-				return query.IToUint32(input)
-			}, nil
-		}); err != nil {
-		panic(err)
-	}
-
-	if err := bloblang.RegisterMethodV2("int8",
-		bloblang.NewPluginSpec().
-			Category(query.MethodCategoryNumbers).
-			Description(`
-Converts a numerical type into a 8-bit signed integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
-
-If the value is a string then an attempt will be made to parse it as a 8-bit integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first.`).
-			Example("", `
-root.a = this.a.int8()
-root.b = this.b.round().int8()
-root.c = this.c.int8()
-`,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12"}`,
-					`{"a":12,"b":12,"c":12}`,
-				},
-			),
-		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
-			return func(input any) (any, error) {
-				return query.IToInt16(input)
-			}, nil
-		}); err != nil {
-		panic(err)
-	}
-
-	if err := bloblang.RegisterMethodV2("int16",
-		bloblang.NewPluginSpec().
-			Category(query.MethodCategoryNumbers).
-			Description(`
-Converts a numerical type into a 16-bit signed integer, this is for advanced use cases where a specific data type is needed for a given component (such as the ClickHouse SQL driver).
-
-If the value is a string then an attempt will be made to parse it as a 8-bit integer. If the target value exceeds the capacity of an integer or contains decimal values then this method will throw an error. In order to convert a floating point number containing decimals first use `+"[`.round()`](#round)"+` on the value first.`).
-			Example("", `
-root.a = this.a.int16()
-root.b = this.b.round().int16()
-root.c = this.c.int16()
-`,
-				[2]string{
-					`{"a":12,"b":12.34,"c":"12"}`,
-					`{"a":12,"b":12,"c":12}`,
-				},
-			),
-		func(args *bloblang.ParsedParams) (bloblang.Method, error) {
-			return func(input any) (any, error) {
-				return query.IToInt16(input)
+				sanitInput := query.ISanitize(input)
+				switch v := sanitInput.(type) {
+				case float64:
+					return math.Abs(v), nil
+				case int64:
+					switch {
+					case v >= 0:
+						return v, nil
+					case v == query.MinInt:
+						return query.MaxInt, nil
+					default:
+						return -v, nil
+					}
+				}
+				return nil, query.NewTypeError(input, query.ValueNumber, query.ValueInt)
 			}, nil
 		}); err != nil {
 		panic(err)
