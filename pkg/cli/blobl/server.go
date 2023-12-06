@@ -183,8 +183,8 @@ func runServer(c *cli.Context) error {
 			return
 		}
 
-		execCache := newExecCache()
-		output, err := execCache.executeMapping(exec, false, true, []byte(req.Input))
+		ExecCache := NewExecCache()
+		output, err := ExecCache.ExecuteMapping(exec, false, true, []byte(req.Input))
 		if err != nil {
 			res.MappingError = err.Error()
 		} else {

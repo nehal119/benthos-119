@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"strings"
 	"sync"
 
 	"go.opentelemetry.io/otel/trace"
@@ -290,10 +291,21 @@ func (t *Type) ForStream(id string) bundle.NewManagement {
 }
 
 func (t *Type) forStream(id string) *Type {
+	strArr := strings.Split(id, "_")
+	// for logging purpose fetching session,org,file name from id
+	var sessionName, organisationName, fileName = "", "", ""
+	if len(strArr) > 2 {
+		fileName = strArr[0]
+		sessionName = strArr[1]
+		organisationName = strArr[2]
+	}
 	newT := *t
 	newT.stream = id
 	newT.logger = t.logger.WithFields(map[string]string{
-		"stream": id,
+		"stream":       id,
+		"session":      sessionName,
+		"organisation": organisationName,
+		"file":         fileName,
 	})
 	newT.stats = t.stats.WithLabels("stream", id)
 	return &newT

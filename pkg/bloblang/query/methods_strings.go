@@ -2020,3 +2020,57 @@ root.description = this.description.trim_suffix("_foobar")`,
 		}, nil
 	},
 )
+
+//------------------------------------------------------------------------------
+
+var _ = registerSimpleMethod(
+	NewMethodSpec(
+		"float", "",
+	).InCategory(
+		MethodCategoryEncoding,
+		"Converts a string according to a chosen base size and bit size into float and returns a number result.",
+		NewExampleSpec("",
+			`root.number = this.hexValue.float(16, 32)`,
+			`{"hexValue":"41259120"}`,
+			`{"number":"10.347931"}`,
+		),
+	).
+		Param(ParamInt64("base", "The base size to use for string, it can be `0`, `2` to `36`.")).
+		Param(ParamInt64("bit", "It defines the integer type. it can be `0`,`8`,`16`,`32` or `64`")),
+	func(args *ParsedParams) (simpleMethod, error) {
+		baseValue, err := args.FieldInt64("base")
+		if err != nil {
+			return nil, err
+		}
+		bitSize, err := args.FieldInt64("bit")
+		if err != nil {
+			return nil, err
+		}
+		var schemeFn func(string) (any, error)
+		switch bitSize {
+		case 0, 8, 16, 32, 64:
+			schemeFn = func(b string) (any, error) {
+				n, err := strconv.ParseInt(b, int(baseValue), int(bitSize))
+				if err != nil {
+					return nil, err
+				}
+				return n, nil
+			}
+		default:
+			return nil, fmt.Errorf("bit size not allowed")
+		}
+		return func(v any, ctx FunctionContext) (any, error) {
+			var res any
+			var err error
+			switch t := v.(type) {
+			case string:
+				res, err = schemeFn(t)
+			case []byte:
+				res, err = schemeFn(string(t))
+			default:
+				err = NewTypeError(v, ValueString)
+			}
+			return res, err
+		}, nil
+	},
+)
